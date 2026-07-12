@@ -1,64 +1,42 @@
 import Image from "next/image";
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
+
+// How is rating calculated?
+// have scores in an easy grid format to take a screenshot
+// probably fixed max width content display up to 3 column grid, mobile just do one column (..idk how you would have the files though??)
+
+// pull whatever we can out of this file
+// arcade-highscores.json
+// song name, difficulty, classic v half time v double time
+// score
+// accuracy
+// max combo
+// individual note judgement rating counts
+// chart level
+// cleared or not
+// update count
+// grade?
+// no miss, full combo, perfect full combo?
+
+// need to map to proper song name
+
+// would be nice to visualize how ratings work?
+
+// obv want to optimize display for top 25 since thats whats used a lot in-game
+
+// show the rating big at the top
+
+// do we worry about album art? means more work to update.....
 
 export default function Home() {
   return (
     <div className={styles.page}>
+      <header>
+        
+      </header>
       <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div>
+          File upload
         </div>
       </main>
     </div>
