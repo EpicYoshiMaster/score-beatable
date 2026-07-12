@@ -1,5 +1,8 @@
+'use client'
+
 import Image from "next/image";
 import styles from "./page.module.scss";
+import { useDropzone } from 'react-dropzone';
 
 // How is rating calculated?
 // have scores in an easy grid format to take a screenshot
@@ -28,15 +31,78 @@ import styles from "./page.module.scss";
 
 // do we worry about album art? means more work to update.....
 
+const PALETTES = [
+  { title: "default", primary: "#FF257D", background: "#F9F7D5", detail: "#E0DEBF", secondary: "#B4B399", highlight: "#000000" },
+  { title: "Beat", primary: "#FF97B0", background: "#FFFFFF", detail: "#FFCBD5", secondary: "#FF6483", highlight: "#FFAF00" },
+  { title: "Quaver", primary: "#70DAFF", background: "#318CD0", detail: "#EFEFEF", secondary: "#FF97B0", highlight: "#4FDAB5" },
+  { title: "Clef", primary: "#7552BF", background: "#F9D33B", detail: "#EDEDED", secondary: "#646D7C", highlight: "#FF4B75" },
+  { title: "Penny", primary: "#B29595", background: "#2F2F2F", detail: "#FEDD00", secondary: "#D87342", highlight: "#E2E6E8" },
+  { title: "Trans Rights", primary: "#F7889D", background: "#F7F7F7", detail: "#35B4E4", secondary: "#EA7D92", highlight: "#3C3C3C" },
+  //{ title: "EpicYoshiMaster", primary: "", background: "", detail: "", secondary: "", highlight: "" },
+];
+
+// for parsing
+type HighscoreEntry = {
+  song: string; // SONG NAME/SONG DIFFICULTY\SONG MODIFIER
+  score: number;
+  accuracy: number;
+  maxCombo: number;
+  notes: {
+    timing: string;
+    count: number;
+  }[];
+  modifierMask: number;
+  level: number;
+  cleared: boolean;
+  updateCount: number;
+  grade: number | null;
+  isNoMiss: boolean;
+  isFullCombo: boolean;
+  isPerfectFullCombo: boolean;
+}
+
+// for actual processed data
+type Highscore = {
+  entry: string; // Internal name
+  title: string; // Proper name
+  difficulty: string; // Beginner, Hard, Expert, UNBEATABLE, Star
+  modifier: string; // Classic DoubleTime HalfTime
+  cover: string;
+  score: number;
+  accuracy: number;
+  maxCombo: number;
+  notes: {
+    timing: string;
+    count: number;
+  }[];
+  modifierMask: number;
+  level: number;
+  cleared: boolean;
+  updateCount: number;
+  grade: number | null; // what is this?
+  isNoMiss: boolean;
+  isFullCombo: boolean;
+  isPerfectFullCombo: boolean;
+}
+
+// windows high scores path: [USER]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
+
 export default function Home() {
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: acceptedFiles => {
+      console.log(acceptedFiles);
+    }
+  });
+
   return (
     <div className={styles.page}>
       <header>
         
       </header>
       <main className={styles.main}>
-        <div>
-          File upload
+        <div {...getRootProps()}>
+          <input {...getInputProps()} />
+          <p>arcade-highscores.json</p>
         </div>
       </main>
     </div>
