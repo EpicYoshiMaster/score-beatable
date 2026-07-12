@@ -1,4 +1,84 @@
 .page {
-	background: var(--background);
+	position: relative;
+
+	background: var(--primary);
+	color: var(--primary);
 	height: 100vh;
+
+	&__content {
+		position: relative;
+		width: 1000px;
+		max-width: 1000px;
+		height: 100%;
+		
+		background: var(--background);
+
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		overflow: auto;
+	}
+}
+
+.main {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.alert {
+	height: 5rem;
+	width: 90%;
+	padding: 0.5rem;
+	background-color: var(--primary);
+	color: var(--background);
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	font-size: 1.25rem;
+}
+
+.control {
+	position: relative;
+	background-color: var(--background);
+	background: none;
+	color: var(--primary);
+
+	transition: 0.2s linear background-color;
+
+	&:hover, &:active {
+		background-color: var(--highlight);
+		color: var(--background);
+	}
+}
+
+.select {
+	border: none;
+	margin: 0.5rem 0;
+	padding: 0.5rem;
+	font-size: 1.25rem;
+
+	&::before {
+		content: "// "
+	}
+}
+
+.button {
+	border: none;
+	margin: 0.5rem 0;
+	padding: 0.5rem;
+	font-size: 1.25rem;
+
+	cursor: pointer;
+}
+
+.score {
+	color: var(--primary);
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+	font-size: 1.5rem;
 }

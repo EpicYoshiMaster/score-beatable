@@ -3,7 +3,10 @@
 import Image from "next/image";
 import styles from "./page.module.scss";
 import { useDropzone } from 'react-dropzone';
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { processScores } from "@/utils/helpers";
+//import { useLocalStorage } from "@/utils/hooks";
+import { HighScore } from "@/types";
 
 // How is rating calculated?
 // have scores in an easy grid format to take a screenshot
@@ -42,59 +45,61 @@ const PALETTES = [
   //{ title: "EpicYoshiMaster", primary: "", background: "", detail: "", secondary: "", highlight: "" },
 ];
 
-// for parsing
-type HighscoreEntry = {
-  song: string; // SONG NAME/SONG DIFFICULTY\SONG MODIFIER
-  score: number;
-  accuracy: number;
-  maxCombo: number;
-  notes: {
-    timing: string;
-    count: number;
-  }[];
-  modifierMask: number;
-  level: number;
-  cleared: boolean;
-  updateCount: number;
-  grade: number | null;
-  isNoMiss: boolean;
-  isFullCombo: boolean;
-  isPerfectFullCombo: boolean;
-}
-
-// for actual processed data
-type Highscore = {
-  entry: string; // Internal name
-  title: string; // Proper name
-  difficulty: string; // Beginner, Hard, Expert, UNBEATABLE, Star
-  modifier: string; // Classic DoubleTime HalfTime
-  cover: string;
-  score: number;
-  accuracy: number;
-  maxCombo: number;
-  notes: {
-    timing: string;
-    count: number;
-  }[];
-  modifierMask: number;
-  level: number;
-  cleared: boolean;
-  updateCount: number;
-  grade: number | null; // what is this?
-  isNoMiss: boolean;
-  isFullCombo: boolean;
-  isPerfectFullCombo: boolean;
-}
-
 // windows high scores path: [USER]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
 
 export default function Home() {
-  const [paletteIndex, setPaletteIndex] = useState(0);
+  const [paletteIndex, setPaletteIndex] = useState(0);//useLocalStorage<number>("paletteIndex", 0);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [scores, setScores] = useState<HighScore[]>([]);
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: acceptedFiles => {
-      console.log(acceptedFiles);
+  const handleImport = useCallback(async (acceptedFiles: File[]) => {
+    if(acceptedFiles.length > 1)
+		{
+			setImportError("Only one file can be imported at a time.");
+			return;
+		}
+
+		if(acceptedFiles.length == 0)
+		{
+			setImportError("An unknown issue occurred while trying to load the file.");
+			return;
+		}
+
+		const [ file ] = acceptedFiles;
+
+		if(!file.name.endsWith('.json'))
+		{
+			setImportError("Files must end in .json");
+			return;
+		}
+
+    try {
+      const importedFile = await file.text();
+      const importedJSON = JSON.parse(importedFile);
+
+      if(importedJSON.highScores) {
+          console.log(`Success: ${importedJSON.highScores}`);
+
+          setScores(processScores(importedJSON.highScores));
+
+          setImportError(null);
+        }
+        else {
+          setImportError("The file provided failed to be matched as an UNBEATABLE high scores file.");
+        }
     }
+    catch (error) {
+      setImportError(`The scores file could not be read: ${error}.`);
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, open } = useDropzone({
+    onDrop: handleImport, 
+    accept: { 'application/json': ['.json'] }, 
+    noClick: true, 
+    noDrag: true, 
+    noKeyboard: true, 
+    multiple: false 
   });
 
   const paletteVariables: React.CSSProperties = useMemo(() => {
@@ -113,20 +118,38 @@ export default function Home() {
 
   return (
     <div className={styles.page} style={paletteVariables}>
-      <header>
-        
-      </header>
-      <main className={styles.main}>
-        <select value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
-          {PALETTES.map((palette, index) => (
-            <option key={index} value={`${index}`}>{palette.title}</option>
-          ))}
-        </select>
-        <div {...getRootProps()}>
-          <input {...getInputProps()} />
-          <p>arcade-highscores.json</p>
-        </div>
-      </main>
+      <div className={styles['page__content']}>
+        <header >
+          <h1>SCOREBEATABLE</h1>
+        </header>
+        <main className={styles.main}>
+          <select className={`${styles.control} ${styles.select}`} value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
+            {PALETTES.map((palette, index) => (
+              <option key={index} value={`${index}`}>{palette.title}</option>
+            ))}
+          </select>
+
+          {importError && (
+            <div className={styles.alert}>{importError}</div>
+          )}
+          
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// Select your Arcade Scores file'}</button>
+          </div>
+
+          {scores.map((score, index) => {
+            return (
+              <div className={styles.score} key={index}>
+                <span>{score.level}: {score.title} - {score.difficulty} ({score.modifier})</span>
+                <span>{score.score}</span>
+                <span>{score.accuracy}</span>
+                <span>{score.updateCount}</span>
+              </div>
+            )
+          })}
+        </main>
+      </div>
     </div>
   );
 }
