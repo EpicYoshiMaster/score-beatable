@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./page.module.scss";
 import { useDropzone } from 'react-dropzone';
+import { useMemo, useState } from "react";
 
 // How is rating calculated?
 // have scores in an easy grid format to take a screenshot
@@ -88,18 +89,39 @@ type Highscore = {
 // windows high scores path: [USER]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
 
 export default function Home() {
+  const [paletteIndex, setPaletteIndex] = useState(0);
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: acceptedFiles => {
       console.log(acceptedFiles);
     }
   });
 
+  const paletteVariables: React.CSSProperties = useMemo(() => {
+    const palette = PALETTES[paletteIndex];
+
+    if(!palette) return {};
+
+    return {
+      '--primary': PALETTES[paletteIndex].primary,
+      '--background': PALETTES[paletteIndex].background,
+      '--detail': PALETTES[paletteIndex].detail,
+      '--secondary': PALETTES[paletteIndex].secondary,
+      '--highlight': PALETTES[paletteIndex].highlight,
+    } as React.CSSProperties;
+  }, [paletteIndex]);
+
   return (
-    <div className={styles.page}>
+    <div className={styles.page} style={paletteVariables}>
       <header>
         
       </header>
       <main className={styles.main}>
+        <select value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
+          {PALETTES.map((palette, index) => (
+            <option key={index} value={`${index}`}>{palette.title}</option>
+          ))}
+        </select>
         <div {...getRootProps()}>
           <input {...getInputProps()} />
           <p>arcade-highscores.json</p>
