@@ -2,13 +2,14 @@ import { Difficulty, HighScoreResult } from "@/types";
 
 export const difficultyToNumber = (difficulty: Difficulty) => {
 	switch(difficulty) {
-		case "Tutorial": return 0;
-		case "Beginner": return 1;
-		case "Easy": return 2;
-		case "Normal": return 3;
-		case "Hard": return 4;
-		case "UNBEATABLE": return 5;
-		case "Star": return 6;
+		case "Beginner": return 0;
+		case "Easy": return 1;
+		case "Normal": return 2;
+		case "Hard": return 3;
+		case "UNBEATABLE": return 4;
+		case "Star": return 5;
+		// Should be unused for arcade
+		case "Tutorial": return 6;
 		case "OFFSETWIZARD": return 7;
 		case "Trailer": return 8;
 		default: return 9;

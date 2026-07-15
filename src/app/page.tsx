@@ -101,6 +101,10 @@ export default function Home() {
     multiple: false 
   });
 
+  const completionRating = useMemo(() => {
+    return getCompletionRating(scores);
+  }, [scores]);
+
   const paletteVariables: React.CSSProperties = useMemo(() => {
     const palette = PALETTES[paletteIndex];
 
@@ -137,7 +141,7 @@ export default function Home() {
             <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// Select your Arcade Scores file'}</button>
           </div>
           <div>
-            {getCompletionRating([])}
+            {completionRating}
           </div>
 
           {scores.map((score, index) => {
