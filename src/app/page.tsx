@@ -4,9 +4,11 @@ import Image from "next/image";
 import styles from "./page.module.scss";
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
-import { processScores } from "@/utils/helpers";
+import { processScores } from "@/utils/process";
 //import { useLocalStorage } from "@/utils/hooks";
-import { HighScore } from "@/types";
+import { HighScoreResult } from "@/types";
+import { sortResultsByAccuracy, sortResultsByTitle } from "@/utils/sort";
+import { getCompletionRating } from "@/utils/ratings";
 
 // How is rating calculated?
 // have scores in an easy grid format to take a screenshot
@@ -25,15 +27,14 @@ import { HighScore } from "@/types";
 // grade?
 // no miss, full combo, perfect full combo?
 
-// need to map to proper song name
-
 // would be nice to visualize how ratings work?
 
 // obv want to optimize display for top 25 since thats whats used a lot in-game
 
 // show the rating big at the top
 
-// do we worry about album art? means more work to update.....
+// linux high scores path: /home/[user]/.local/share/Steam/steamapps/compatdata/2240620/pfx/drive_c/users/steamuser/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
+// windows high scores path: [user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
 
 const PALETTES = [
   { title: "default", primary: "#FF257D", background: "#F9F7D5", detail: "#E0DEBF", secondary: "#B4B399", highlight: "#000000" },
@@ -45,12 +46,10 @@ const PALETTES = [
   //{ title: "EpicYoshiMaster", primary: "", background: "", detail: "", secondary: "", highlight: "" },
 ];
 
-// windows high scores path: [USER]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
-
 export default function Home() {
   const [paletteIndex, setPaletteIndex] = useState(0);//useLocalStorage<number>("paletteIndex", 0);
   const [importError, setImportError] = useState<string | null>(null);
-  const [scores, setScores] = useState<HighScore[]>([]);
+  const [scores, setScores] = useState<HighScoreResult[]>([]);
 
   const handleImport = useCallback(async (acceptedFiles: File[]) => {
     if(acceptedFiles.length > 1)
@@ -78,9 +77,9 @@ export default function Home() {
       const importedJSON = JSON.parse(importedFile);
 
       if(importedJSON.highScores) {
-          console.log(`Success: ${importedJSON.highScores}`);
+          const processedScores = processScores(importedJSON.highScores);
 
-          setScores(processScores(importedJSON.highScores));
+          setScores(processedScores.sort((a, b) => sortResultsByAccuracy(a,b)));
 
           setImportError(null);
         }
@@ -136,6 +135,9 @@ export default function Home() {
           <div {...getRootProps()}>
             <input {...getInputProps()} />
             <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// Select your Arcade Scores file'}</button>
+          </div>
+          <div>
+            {getCompletionRating([])}
           </div>
 
           {scores.map((score, index) => {

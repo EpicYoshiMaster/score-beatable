@@ -19,9 +19,21 @@ export type HighScoreEntry = {
 }
 
 // for actual processed data
-export type HighScore = HighScoreEntry & {
+export type HighScoreResult = HighScoreEntry & {
   entry: string; // Internal name
   title: string; // Proper name
-  difficulty: string; // Beginner, Hard, Expert, UNBEATABLE, Star
-  modifier: string; // Classic DoubleTime HalfTime
+  difficulty: Difficulty; // Beginner, Hard, Expert, UNBEATABLE, Star
+  modifier: Modifier; // Classic DoubleTime HalfTime
+  custom: boolean;
+  difficultyName: string | null;
 }
+
+export type SongEntry = {
+  title: string;
+  difficulty: string;
+  artist: string;
+  creator: string;
+}
+
+export type Difficulty = 'Tutorial' | 'Beginner' | 'Easy' | 'Normal' | 'Hard' | 'UNBEATABLE' | 'Star' | 'OFFSETWIZARD' | 'Trailer' | 'Unknown';
+export type Modifier = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
