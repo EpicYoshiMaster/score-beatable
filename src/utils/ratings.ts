@@ -1,9 +1,9 @@
 // Based on Ratings as of 2.0.6 (PlayerStatsHelper.cs)
-import { HighScoreResult, SongEntry } from "@/types";
+import { HighScoreResult, SongEntry, TableRow } from "@/types";
 import songs from "@/data/songs.json";
 import { difficultyToNumber } from "./sort";
 import { getGradeCoefArcade } from "./grades";
-import { formatAccuracy } from "./format";
+import { formatAccuracy, formatRating } from "./format";
 
 // Beginner, Easy, Normal, Hard, UNBEATABLE, Star
 const DIFFICULTY_COUNT = 6;
@@ -114,14 +114,24 @@ export const getTotalSongRating = (results: HighScoreResult[]) => {
 
 export const buildRatingTable = () => {
 	const levels =[...Array(25).keys()].map((level) => level + 1); // 1-25
-	const accuracies = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99, 1];
+	//const accuracies = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1];
+	//const accuracies = [0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1];
+	const accuracies = [0.95, 0.955, 0.96, 0.965, 0.97, 0.975, 0.98, 0.985, 0.99, 0.995, 1];
 
-	return levels.reduce((table, level) => {
-		return { 
-			...table,
-			[`${level}`]: accuracies.reduce((rows, accuracy) => {
-				return { ...rows, [`${formatAccuracy(accuracy)}`]: getSongRating(accuracy, level, accuracy === 1, true) }
-			}, {}) 
+	const headerRow: TableRow = {
+		header: '',
+		columns: [' '].concat(accuracies.map((accuracy) => formatAccuracy(accuracy)))
+	}
+
+	const levelRows: TableRow[] = levels.map((level) => {
+		return {
+			header: `${level}`,
+			columns: accuracies.map((accuracy) => formatRating(getSongRating(accuracy, level, false, true)))
 		}
-	}, {} as { [key: string]: { [key: string]: number }});
+	})
+
+	return {
+		headerRow,
+		levelRows
+	};
 }

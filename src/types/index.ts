@@ -50,3 +50,8 @@ export type GradeOption = 'Greater' | 'Equal' | 'NoMiss' | 'Bonus';
 export type Difficulty = 'Tutorial' | 'Beginner' | 'Easy' | 'Normal' | 'Hard' | 'UNBEATABLE' | 'Star' | 'OFFSETWIZARD' | 'Trailer' | 'Unknown';
 export type Modifier = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
 export type Judgement = 'Miss' | 'Barely' | 'Ok' | 'Good' | 'Great' | 'Perfect' | 'Critical';
+
+export type TableRow = {
+  header: string;
+  columns: string[];
+}

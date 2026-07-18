@@ -1,7 +1,7 @@
 import { HighScoreResult } from "@/types";
 import { shouldCountResult } from "./ratings";
 
-const MAX_LENGTH = 50;
+const MAX_LENGTH = 40;
 
 export const formatTitle = (title: string) => {
 	if(title.length <= MAX_LENGTH) return title;

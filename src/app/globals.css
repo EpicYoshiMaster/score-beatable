@@ -12,7 +12,7 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-londrina-solid), Arial, Helvetica, sans-serif;
+  font-family: var(--font-rubik-black), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -28,4 +28,15 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+table {
+  width: 100%;
+  padding: 1rem;
+  font-family: var(--font-rubik-mono-one);
+  font-size: 0.9rem;
+  
+  td, th {
+    text-align: right;
+  }
 }

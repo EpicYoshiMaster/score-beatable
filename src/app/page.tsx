@@ -115,7 +115,7 @@ export default function Home() {
     return completionRating + songRating;
   }, [completionRating, songRating]);
 
-  const ratingTable = useMemo(() => {
+  const { headerRow, levelRows } = useMemo(() => {
     return buildRatingTable();
   }, []);
 
@@ -173,21 +173,27 @@ export default function Home() {
             )
           })}
 
-          {/*<table>
-            <th>
-              <td>&nbsp;</td>
-              {Object.keys(Object.values(ratingTable).flat()).map((accuracy, index) => {
-                return (<td key={index}>{accuracy}</td>);
-              })
-              }
-            </th>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                {headerRow.columns.map((value, index) => (
+                  <th className={styles['table__header']} scope="col" key={index}>{value}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+                {levelRows.map((row, rowIndex) => {
+                return (
+                  <tr key={rowIndex}>
+                    <th className={styles['table__header']} scope="row">{row.header}</th>
+                    {row.columns.map((rating, columnIndex) => (
+                      <td className={styles['table__data']} key={columnIndex}>{rating}</td>
+                    ))}
+                  </tr>
+                )
+              })}
+            </tbody>
           </table>
-
-          {Object.entries(ratingTable).map(([level, accuracies], rowIndex) => {
-            return <div key={rowIndex}>{Object.entries(accuracies).map(([accuracy, rating], colIndex) => (
-              <span key={colIndex}>{formatRating(rating)}</span>
-            ))}</div>
-          })}*/}
         </main>
       </div>
     </div>
