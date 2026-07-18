@@ -7,10 +7,10 @@ import { useCallback, useMemo, useState } from "react";
 import { processScores } from "@/utils/process";
 //import { useLocalStorage } from "@/utils/hooks";
 import { HighScoreResult } from "@/types";
-import { sortResultsByAccuracy, sortResultsByTitle } from "@/utils/sort";
-import { getCompletionRating } from "@/utils/ratings";
+import { sortResultsByAccuracy, sortResultsByRating, sortResultsByTitle } from "@/utils/sort";
+import { buildRatingTable, getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
+import { formatAccuracy, formatRating, formatResultRating, formatTitle } from "@/utils/format";
 
-// How is rating calculated?
 // have scores in an easy grid format to take a screenshot
 // probably fixed max width content display up to 3 column grid, mobile just do one column (..idk how you would have the files though??)
 
@@ -30,8 +30,6 @@ import { getCompletionRating } from "@/utils/ratings";
 // would be nice to visualize how ratings work?
 
 // obv want to optimize display for top 25 since thats whats used a lot in-game
-
-// show the rating big at the top
 
 // linux high scores path: /home/[user]/.local/share/Steam/steamapps/compatdata/2240620/pfx/drive_c/users/steamuser/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
 // windows high scores path: [user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
@@ -79,7 +77,7 @@ export default function Home() {
       if(importedJSON.highScores) {
           const processedScores = processScores(importedJSON.highScores);
 
-          setScores(processedScores.sort((a, b) => sortResultsByAccuracy(a,b)));
+          setScores(processedScores.sort((a, b) => sortResultsByRating(a,b)));
 
           setImportError(null);
         }
@@ -101,9 +99,25 @@ export default function Home() {
     multiple: false 
   });
 
+  const combinedHighScore = useMemo(() => {
+    return getCombinedHighScore(scores);
+  }, [scores]);
+
   const completionRating = useMemo(() => {
     return getCompletionRating(scores);
   }, [scores]);
+
+  const songRating = useMemo(() => {
+    return getTotalSongRating(scores);
+  }, [scores]);
+
+  const playerRating = useMemo(() => {
+    return completionRating + songRating;
+  }, [completionRating, songRating]);
+
+  const ratingTable = useMemo(() => {
+    return buildRatingTable();
+  }, []);
 
   const paletteVariables: React.CSSProperties = useMemo(() => {
     const palette = PALETTES[paletteIndex];
@@ -141,19 +155,39 @@ export default function Home() {
             <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// Select your Arcade Scores file'}</button>
           </div>
           <div>
-            {completionRating}
+            {combinedHighScore}
+          </div>
+          <div className={styles.rating}>
+            {formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
           </div>
 
           {scores.map((score, index) => {
             return (
               <div className={styles.score} key={index}>
-                <span>{score.level}: {score.title} - {score.difficulty} ({score.modifier})</span>
+                <span>{score.level}: {formatTitle(score.title)} - {score.difficultyName} ({score.modifier})</span>
+                <span>{score.resultGrade.grade}</span>
                 <span>{score.score}</span>
-                <span>{score.accuracy}</span>
-                <span>{score.updateCount}</span>
+                <span>{formatAccuracy(score.accuracy)}</span>
+                <span>{formatResultRating(score, true)}</span>
               </div>
             )
           })}
+
+          {/*<table>
+            <th>
+              <td>&nbsp;</td>
+              {Object.keys(Object.values(ratingTable).flat()).map((accuracy, index) => {
+                return (<td key={index}>{accuracy}</td>);
+              })
+              }
+            </th>
+          </table>
+
+          {Object.entries(ratingTable).map(([level, accuracies], rowIndex) => {
+            return <div key={rowIndex}>{Object.entries(accuracies).map(([accuracy, rating], colIndex) => (
+              <span key={colIndex}>{formatRating(rating)}</span>
+            ))}</div>
+          })}*/}
         </main>
       </div>
     </div>

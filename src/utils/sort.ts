@@ -41,3 +41,7 @@ export const sortResultsByScore = (a: HighScoreResult, b: HighScoreResult, rever
 export const sortResultsByAccuracy = (a: HighScoreResult, b: HighScoreResult, reverse?: boolean) => {
 	return reverse ? b.accuracy - a.accuracy : a.accuracy - b.accuracy;
 }
+
+export const sortResultsByRating = (a: HighScoreResult, b: HighScoreResult) => {
+	return b.rating - a.rating;
+}

@@ -1,0 +1,15 @@
+{
+	"resultGrades": [
+		{ "grade": "F", "accuracy": -1, "rankingCoef": 0, "options": ["Greater", "Bonus"] },
+		{ "grade": "C++", "accuracy": 1, "rankingCoef": 35, "options": ["Greater"] },
+		{ "grade": "S++", "accuracy": 1, "rankingCoef": 35, "options": ["Equal"] },
+		{ "grade": "S+", "accuracy": 0.99, "rankingCoef": 33, "options": ["Greater", "NoMiss"] },
+		{ "grade": "S", "accuracy": 0.95, "rankingCoef": 30, "options": ["Greater", "Bonus"] },
+		{ "grade": "A", "accuracy": 0.85, "rankingCoef": 20, "options": ["Greater", "Bonus"] },
+		{ "grade": "B", "accuracy": 0.75, "rankingCoef": 15, "options": ["Greater", "Bonus"] },
+		{ "grade": "C", "accuracy": 0.65, "rankingCoef": 12, "options": ["Greater", "Bonus"] },
+		{ "grade": "D", "accuracy": 0.55, "rankingCoef": 10, "options": ["Greater", "Bonus"] },
+		{ "grade": "HOW?", "accuracy": 0, "rankingCoef": 10, "options": ["Greater", "Bonus"] }
+	],
+	"aPlusGrade": { "grade": "A", "accuracy": 0.9, "rankingCoef": 25, "options": ["Greater", "Bonus"] }
+}

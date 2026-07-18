@@ -1,5 +1,7 @@
 import { HighScoreResult, HighScoreEntry, Modifier, Difficulty, SongEntry } from "@/types";
 import songs from "@/data/songs.json";
+import { getGrade } from "./grades";
+import { getSongRating, RATING_TOP_CUT } from "./ratings";
 
 // They're formatted as Internal Song Name/Difficulty\Modifier
 const splitSongField = (song: string): { entry: string, difficulty: Difficulty, modifier: Modifier } => {
@@ -45,13 +47,19 @@ export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult
 		const title = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].title : songFields.entry;
 		const custom = title.startsWith("CUSTOM_");
 		const difficultyName = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].difficulty : songFields.difficulty;
+		const resultGrade = getGrade(score.accuracy, score.isNoMiss, score.cleared);
+		const rating = getSongRating(score.accuracy, score.level, score.isNoMiss, score.cleared);
+		const averagedRating = rating / RATING_TOP_CUT;
 
 		return {
 			...score,
 			...songFields,
 			title,
 			custom,
-			difficultyName
+			difficultyName,
+			resultGrade,
+			rating,
+			averagedRating
 		};
 	});
 }

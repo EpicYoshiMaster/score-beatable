@@ -5,7 +5,7 @@ export type HighScoreEntry = {
   accuracy: number;
   maxCombo: number;
   notes: {
-    timing: string;
+    timing: Judgement;
     count: number;
   }[];
   modifierMask: number;
@@ -26,6 +26,9 @@ export type HighScoreResult = HighScoreEntry & {
   modifier: Modifier; // Classic DoubleTime HalfTime
   custom: boolean;
   difficultyName: string | null;
+  rating: number;
+  averagedRating: number;
+  resultGrade: ResultGrade;
 }
 
 export type SongEntry = {
@@ -35,5 +38,15 @@ export type SongEntry = {
   creator: string;
 }
 
+export type ResultGrade = {
+  grade: Grade;
+  accuracy: number;
+  rankingCoef: number;
+  options: GradeOption[];
+}
+
+export type Grade = 'F' | 'C++' | 'S++' | 'S+' | 'S' | 'A' | 'B' | 'C' | 'D' | 'HOW?';
+export type GradeOption = 'Greater' | 'Equal' | 'NoMiss' | 'Bonus';
 export type Difficulty = 'Tutorial' | 'Beginner' | 'Easy' | 'Normal' | 'Hard' | 'UNBEATABLE' | 'Star' | 'OFFSETWIZARD' | 'Trailer' | 'Unknown';
 export type Modifier = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
+export type Judgement = 'Miss' | 'Barely' | 'Ok' | 'Good' | 'Great' | 'Perfect' | 'Critical';
