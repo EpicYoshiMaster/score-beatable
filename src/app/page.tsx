@@ -11,25 +11,22 @@ import { sortResultsByAccuracy, sortResultsByRating, sortResultsByTitle } from "
 import { buildRatingTable, getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
 import { formatAccuracy, formatRating, formatResultRating, formatTitle } from "@/utils/format";
 
+// tabs: Scores, Top 25, Ratings Info
+// Scores is the main tab which lets you manipulate and view everything in different ways
+// Top 25 gives a simple format optimized to showing what you'd see in-game
+// Rating Info dives into how ratings work, you can tweak the values to see how they change, and view a full table 
+
+// sort by dropdown: score, accuracy, rating, song name (default to averaged rating to show what you'd see in-game)
+// filter: half time, classic, double time, cleared, custom
+// rating vs. averaged rating (what you see in-game)
+
+// mobile: put all the options in a side drawer primary bg style like the game does with option menu
+// regular screen should just focus song results / prose, maybe a title. maybe nav at the top ?
+
+// desktop should use all the screen real estate I'd like something more stylized need to think about it more
+
 // have scores in an easy grid format to take a screenshot
 // probably fixed max width content display up to 3 column grid, mobile just do one column (..idk how you would have the files though??)
-
-// pull whatever we can out of this file
-// arcade-highscores.json
-// song name, difficulty, classic v half time v double time
-// score
-// accuracy
-// max combo
-// individual note judgement rating counts
-// chart level
-// cleared or not
-// update count
-// grade?
-// no miss, full combo, perfect full combo?
-
-// would be nice to visualize how ratings work?
-
-// obv want to optimize display for top 25 since thats whats used a lot in-game
 
 // linux high scores path: /home/[user]/.local/share/Steam/steamapps/compatdata/2240620/pfx/drive_c/users/steamuser/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
 // windows high scores path: [user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
@@ -116,7 +113,7 @@ export default function Home() {
   }, [completionRating, songRating]);
 
   const { headerRow, levelRows } = useMemo(() => {
-    return buildRatingTable();
+    return buildRatingTable('General', true);
   }, []);
 
   const paletteVariables: React.CSSProperties = useMemo(() => {
@@ -135,9 +132,15 @@ export default function Home() {
 
   return (
     <div className={styles.page} style={paletteVariables}>
+      <div aria-hidden className={`${styles.bigText} ${styles.topRight}`}>
+        SCORE
+      </div>
+      <div aria-hidden className={`${styles.bigText} ${styles.bottomLeft}`}>
+        BEATABLE
+      </div>
       <div className={styles['page__content']}>
-        <header >
-          <h1>SCOREBEATABLE</h1>
+        <header>
+          <h1 className={styles.heading}>SCOREBEATABLE</h1>
         </header>
         <main className={styles.main}>
           <select className={`${styles.control} ${styles.select}`} value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
@@ -152,7 +155,7 @@ export default function Home() {
           
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// Select your Arcade Scores file'}</button>
+            <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// select your arcade scores file.'}</button>
           </div>
           <div>
             {combinedHighScore}

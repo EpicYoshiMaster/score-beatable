@@ -51,6 +51,8 @@ export type Difficulty = 'Tutorial' | 'Beginner' | 'Easy' | 'Normal' | 'Hard' | 
 export type Modifier = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
 export type Judgement = 'Miss' | 'Barely' | 'Ok' | 'Good' | 'Great' | 'Perfect' | 'Critical';
 
+export type AccuracyRange = 'General' | 'Middle' | 'Upper' | 'Top';
+
 export type TableRow = {
   header: string;
   columns: string[];
