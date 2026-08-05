@@ -1,15 +1,13 @@
 'use client'
 
-import Image from "next/image";
 import styles from "./page.module.scss";
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
 import { processScores } from "@/utils/process";
-//import { useLocalStorage } from "@/utils/hooks";
 import { HighScoreResult } from "@/types";
-import { sortResultsByAccuracy, sortResultsByRating, sortResultsByTitle } from "@/utils/sort";
-import { buildRatingTable, getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
-import { formatAccuracy, formatRating, formatResultRating, formatTitle } from "@/utils/format";
+import { sortResultsByRating } from "@/utils/sort";
+import { buildRatingTable } from "@/utils/ratings";
+import Scores from "@/components/Scores";
 
 // tabs: Scores, Top 25, Ratings Info
 // Scores is the main tab which lets you manipulate and view everything in different ways
@@ -96,22 +94,6 @@ export default function Home() {
     multiple: false 
   });
 
-  const combinedHighScore = useMemo(() => {
-    return getCombinedHighScore(scores);
-  }, [scores]);
-
-  const completionRating = useMemo(() => {
-    return getCompletionRating(scores);
-  }, [scores]);
-
-  const songRating = useMemo(() => {
-    return getTotalSongRating(scores);
-  }, [scores]);
-
-  const playerRating = useMemo(() => {
-    return completionRating + songRating;
-  }, [completionRating, songRating]);
-
   const { headerRow, levelRows } = useMemo(() => {
     return buildRatingTable('General', true);
   }, []);
@@ -157,24 +139,7 @@ export default function Home() {
             <input {...getInputProps()} />
             <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// select your arcade scores file.'}</button>
           </div>
-          <div>
-            {combinedHighScore}
-          </div>
-          <div className={styles.rating}>
-            {formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
-          </div>
-
-          {scores.map((score, index) => {
-            return (
-              <div className={styles.score} key={index}>
-                <span>{score.level}: {formatTitle(score.title)} - {score.difficultyName} ({score.modifier})</span>
-                <span>{score.resultGrade.grade}</span>
-                <span>{score.score}</span>
-                <span>{formatAccuracy(score.accuracy)}</span>
-                <span>{formatResultRating(score, true)}</span>
-              </div>
-            )
-          })}
+          <Scores scores={scores} />
 
           <table className={styles.table}>
             <thead>

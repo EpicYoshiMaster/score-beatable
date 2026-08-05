@@ -1,0 +1,13 @@
+.rating {
+	font-family: var(--font-rubik-mono-one), Arial, Helvetica, sans-serif;
+	color: var(--primary);
+	font-size: 3rem;
+}
+
+.score {
+	color: var(--primary);
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+	font-size: 1.5rem;
+}

@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
   {
     rules: {
       "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
     }
   },
   // Override default ignores of eslint-config-next.

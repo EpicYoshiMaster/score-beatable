@@ -38,7 +38,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${londrinaSolid.variable} ${notoSans.variable} ${rubikBlack.variable} ${rubikMonoOne.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+      </body>
     </html>
   );
 }
