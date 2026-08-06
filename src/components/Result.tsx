@@ -1,7 +1,8 @@
 import { HighScoreResult, RatingDisplay } from "@/types";
 import styles from "./result.module.scss";
-import { formatAccuracy, formatModifier, formatResultRating, formatScore, formatTitle } from "@/utils/format";
+import { formatAccuracy, formatResultRating, formatScore, formatTitle } from "@/utils/format";
 import { shouldCountResult } from "@/utils/ratings";
+import { toHeaderCase } from "js-convert-case";
 
 interface ResultProps {
 	result: HighScoreResult;
@@ -11,7 +12,7 @@ interface ResultProps {
 
 const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 	const shouldCount = shouldCountResult(result);
-	const modifierText = result.modifier === "Classic" ? '' : `[${formatModifier(result.modifier)}]${shouldCount ? '' : '*'}`;
+	const modifierText = result.modifier === "Classic" ? '' : `[${toHeaderCase(result.modifier)}]${shouldCount ? '' : '*'}`;
 
 	return (
 		<div className={styles.container}>

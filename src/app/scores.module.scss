@@ -12,6 +12,12 @@
 	font-size: 1.5rem;
 }
 
+.filters {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+}
+
 .highScore {
 	font-family: var(--font-rubik-mono-one), Arial, Helvetica, sans-serif;
 	color: var(--primary);

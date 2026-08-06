@@ -1,4 +1,4 @@
-import { HighScoreResult, HighScoreEntry, Modifier, Difficulty, SongEntry } from "@/types";
+import { HighScoreResult, HighScoreEntry, Modifier, Difficulty, SongEntry, ClearState, SongType } from "@/types";
 import songs from "@/data/songs.json";
 import { getGrade } from "./grades";
 import { getSongRating, RATING_TOP_CUT } from "./ratings";
@@ -37,6 +37,14 @@ const splitSongField = (song: string): { entry: string, difficulty: Difficulty, 
 	}
 }
 
+const getClearState = (scoreEntry: HighScoreEntry): ClearState => {
+	if(!scoreEntry.cleared) return 'Fail';
+	if(scoreEntry.isPerfectFullCombo) return 'PerfectFullCombo';
+	if(scoreEntry.isFullCombo) return 'FullCombo';
+
+	return 'Clear';
+}
+
 export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult[] => {
 	return highScoresData.map((score) => {
 
@@ -49,24 +57,28 @@ export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult
 		const level = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].level : score.level;
 
 		const title = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].title : songFields.entry;
-		const custom = title.startsWith("CUSTOM_");
+		const isCustom = title.startsWith("CUSTOM_");
 		const isDlc = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].isDlc : false;
 		const difficultyName = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].difficulty : songFields.difficulty;
 		const resultGrade = getGrade(score.accuracy, score.isNoMiss, score.cleared);
 		const rating = getSongRating(score.accuracy, level, score.isNoMiss, score.cleared);
 		const averagedRating = rating / RATING_TOP_CUT;
+		const clearState = getClearState(score);
+		const songType: SongType = isCustom ? 'Custom' : (isDlc ? 'DLC' : 'Base');
 
 		return {
 			...score,
 			...songFields,
 			title,
-			custom,
+			isCustom,
 			isDlc,
 			difficultyName,
 			resultGrade,
 			rating,
 			averagedRating,
-			level
+			level,
+			clearState,
+			songType
 		};
 	});
 }

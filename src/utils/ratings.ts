@@ -13,7 +13,7 @@ const ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_S
 export const MAX_COMPLETION_RATING = 2.0;
 export const RATING_TOP_CUT = 25;
 
-export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.custom && (result.modifier === 'Classic' || result.modifier === 'DoubleTime');
+export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.isCustom && (result.modifier === 'Classic' || result.modifier === 'DoubleTime');
 
 export const getTotalNumArcadeCharts = () => {
 	return Object.keys(songs).length + ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_SHOW_UP_IN_THE_DATABASE_BUT_IT_DOES_SHOW_IN_VISIBLE_SONGS_EVEN_THOUGH_YOU_LITERALLY_CANNOT_PLAY_IT_WOW_DCELL;
@@ -57,7 +57,7 @@ export const getCompletionRating = (results: HighScoreResult[]) => {
 export const getCombinedHighScore = (results: HighScoreResult[]): number => {
 	if(results.length === 0) return 0;
 
-	const relevantResults = results.filter((result) => result.cleared && !result.custom);
+	const relevantResults = results.filter((result) => result.cleared && !result.isCustom);
 
 	return relevantResults.reduce((totalScore, result) => {
 		return totalScore + result.score;

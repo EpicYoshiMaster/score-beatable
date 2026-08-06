@@ -24,12 +24,14 @@ export type HighScoreResult = HighScoreEntry & {
   title: string; // Proper name
   difficulty: Difficulty; // Beginner, Hard, Expert, UNBEATABLE, Star
   modifier: Modifier; // Classic DoubleTime HalfTime
-  custom: boolean;
+  isCustom: boolean;
   isDlc: boolean;
   difficultyName: string | null;
   rating: number;
   averagedRating: number;
   resultGrade: ResultGrade;
+  clearState: ClearState;
+  songType: SongType;
 }
 
 export type SongEntry = {
@@ -55,6 +57,8 @@ export type GradeOption = 'Greater' | 'Equal' | 'NoMiss' | 'Bonus';
 export type Difficulty = 'Tutorial' | 'Beginner' | 'Easy' | 'Normal' | 'Hard' | 'UNBEATABLE' | 'Star' | 'OFFSETWIZARD' | 'Trailer' | 'Unknown';
 export type Modifier = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
 export type Judgement = 'Miss' | 'Barely' | 'Ok' | 'Good' | 'Great' | 'Perfect' | 'Critical';
+export type ClearState = 'Fail' | 'Clear' | 'FullCombo' | 'PerfectFullCombo';
+export type SongType = 'Base' | 'DLC' | 'Custom';
 
 export type AccuracyRange = 'General' | 'Middle' | 'Upper' | 'Top';
 export type RatingDisplay = 'Averaged' | 'Total' | 'Proper'; // still not sure on these names

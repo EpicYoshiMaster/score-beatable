@@ -1,9 +1,11 @@
-import { HighScoreResult, Modifier } from "@/types";
-import { getCombinedHighScore, getCompletionRating, getTotalSongRating, shouldCountResult } from "@/utils/ratings";
-import { useCallback, useMemo, useState } from "react";
+import { ClearState, HighScoreResult, Modifier, SongType } from "@/types";
+import { getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
+import { useMemo } from "react";
 import styles from "./scores.module.scss";
-import { formatAccuracy, formatModifier, formatRating, formatResultRating, formatTitle } from "@/utils/format";
+import {formatRating } from "@/utils/format";
 import Result from "@/components/Result";
+import useListState from "@/hooks/useListState";
+import { toHeaderCase } from "js-convert-case";
 
 interface ScoresProps {
 	scores: HighScoreResult[];
@@ -16,15 +18,23 @@ interface ScoresProps {
 // Accuracy, Score, Rating, Level, Artist, Charter, Song Title
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['Classic', 'HalfTime', 'DoubleTime'];
+const TOGGLEABLE_CLEAR_STATES: ClearState[] = ['Fail', 'Clear', 'FullCombo', 'PerfectFullCombo'];
+const TOGGLEABLE_SONG_TYPES: SongType[] = ['Base', 'DLC', 'Custom'];
 
 const Scores: React.FC<ScoresProps> = ({ scores }) => {
-	const [shownModifiers, setShownModifiers] = useState<Modifier[]>(['Classic', 'HalfTime', 'DoubleTime']);
+	const [shownModifiers, toggleModifier] = useListState<Modifier>(['Classic', 'HalfTime', 'DoubleTime']);
+	const [shownClearStates, toggleClearState] = useListState<ClearState>(['Clear', 'FullCombo', 'PerfectFullCombo']);
+	const [shownSongTypes, toggleSongType] = useListState<SongType>(['Base', 'DLC']);
 
 	const relevantScores = useMemo(() => {
 		return scores.filter((score) => {
-			return shownModifiers.includes(score.modifier);
+			const matchesModifier = shownModifiers.includes(score.modifier);
+			const matchesClearState = shownClearStates.includes(score.clearState);
+			const matchesSongType = shownSongTypes.includes(score.songType);
+
+			return matchesModifier && matchesClearState && matchesSongType;
 		})
-	}, [scores, shownModifiers]);
+	}, [scores, shownClearStates, shownModifiers, shownSongTypes]);
 
 	const combinedHighScore = useMemo(() => {
 		return getCombinedHighScore(relevantScores);
@@ -42,15 +52,6 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
 		return completionRating + songRating;
 	}, [completionRating, songRating]);
 
-	const toggleShowModifier = useCallback((modifier: Modifier) => {
-		if(shownModifiers.includes(modifier)) {
-			setShownModifiers((modifiers) => modifiers.filter((mod) => mod !== modifier));
-		}
-		else {
-			setShownModifiers((modifiers) => [...modifiers, modifier]);
-		}
-	}, [shownModifiers]);
-
 	return (
 		<>
 			<div className={styles.highScore}>
@@ -59,18 +60,46 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
 			<div className={styles.rating}>
 				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
 			</div>
-			<div>
-				{TOGGLEABLE_MODIFIERS.map((modifier, index) => (
-					<div key={index}>
-						<label htmlFor={modifier}>{formatModifier(modifier)}</label>
-						<input 
-							type="checkbox" 
-							name={modifier} 
-							checked={shownModifiers.includes(modifier)} 
-							onChange={() => toggleShowModifier(modifier)}
-						/>
-					</div>
-				))}
+			<div className={styles.filters}>
+				<div>
+					{TOGGLEABLE_MODIFIERS.map((modifier, index) => (
+						<div key={index}>
+							<label htmlFor={modifier}>{toHeaderCase(modifier)}</label>
+							<input 
+								type="checkbox" 
+								name={modifier} 
+								checked={shownModifiers.includes(modifier)} 
+								onChange={() => toggleModifier(modifier)}
+							/>
+						</div>
+					))}
+				</div>
+				<div>
+					{TOGGLEABLE_CLEAR_STATES.map((clearState, index) => (
+						<div key={index}>
+							<label htmlFor={clearState}>{toHeaderCase(clearState)}</label>
+							<input 
+								type="checkbox" 
+								name={clearState} 
+								checked={shownClearStates.includes(clearState)} 
+								onChange={() => toggleClearState(clearState)}
+							/>
+						</div>
+					))}
+				</div>
+				<div>
+					{TOGGLEABLE_SONG_TYPES.map((songType, index) => (
+						<div key={index}>
+							<label htmlFor={songType}>{songType}</label>
+							<input 
+								type="checkbox" 
+								name={songType} 
+								checked={shownSongTypes.includes(songType)} 
+								onChange={() => toggleSongType(songType)}
+							/>
+						</div>
+					))}
+				</div>
 			</div>
 			<div className={styles.grid}>
 				{relevantScores.map((score, index) => {

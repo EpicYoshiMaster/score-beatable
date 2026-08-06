@@ -1,4 +1,4 @@
-import { HighScoreResult, Modifier, RatingDisplay } from "@/types";
+import { HighScoreResult, RatingDisplay } from "@/types";
 import { MAX_COMPLETION_RATING } from "./ratings";
 
 const MAX_LENGTH = 40;
@@ -12,15 +12,6 @@ export const formatTitle = (title: string) => {
 
 export const formatAccuracy = (accuracy: number): string => {
 	return `${(accuracy * 100).toPrecision(3)}%`;
-}
-
-export const formatModifier = (modifier: Modifier) => {
-	switch(modifier) {
-		case "Classic": return "Classic";
-		case "HalfTime": return "Half Time";
-		case "DoubleTime": return "Double Time";
-		default: return "Unknown";
-	}
 }
 
 export const formatResultRating = (result: HighScoreResult, ratingDisplay: RatingDisplay) => {
