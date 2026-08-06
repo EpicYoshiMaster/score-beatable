@@ -50,23 +50,18 @@ export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult
 
 		const title = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].title : songFields.entry;
 		const custom = title.startsWith("CUSTOM_");
+		const isDlc = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].isDlc : false;
 		const difficultyName = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].difficulty : songFields.difficulty;
 		const resultGrade = getGrade(score.accuracy, score.isNoMiss, score.cleared);
 		const rating = getSongRating(score.accuracy, level, score.isNoMiss, score.cleared);
 		const averagedRating = rating / RATING_TOP_CUT;
-
-		if(!(entryAndDifficulty in songDatabase)) {
-			console.log('Failed to find ', entryAndDifficulty);
-		}
-		else if(songDatabase[entryAndDifficulty].level !== score.level) {
-			console.log('Level Difference!', entryAndDifficulty, ': ', songDatabase[entryAndDifficulty].level, 'vs. ', score.level);
-		}
 
 		return {
 			...score,
 			...songFields,
 			title,
 			custom,
+			isDlc,
 			difficultyName,
 			resultGrade,
 			rating,

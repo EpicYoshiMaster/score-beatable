@@ -13,25 +13,35 @@
 .left {
 	display: flex;
 	flex-direction: column;
+	min-width: 12rem;
 }
 
 .right {
-	display: flex;
+	display: grid;
 	flex-direction: row;
 	align-items: center;
-	gap: 0.5rem;
+	width: 100%;
+	grid-template-columns: 1fr 1fr 1fr;
 }
 
 .title {
 	font-size: 1rem;
 	letter-spacing: 0.3rem;
 	text-transform: lowercase;
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
 }
 
 .difficulty {
 	font-family: var(--font-rubik-black), Arial, Helvetica, sans-serif;
 	font-size: 1rem;
 	height: 1rem;
+	text-transform: uppercase;
+}
+
+.modifier {
+	font-weight: bold;
 	text-transform: uppercase;
 }
 
@@ -48,9 +58,20 @@
 	height: 3.5rem;
 }
 
+.unranked {
+	color: var(--secondary);
+}
+
 .accuracy {
 	font-family: var(--font-rubik-mono-one), Arial, Helvetica, sans-serif;
 	color: var(--primary);
 	font-size: 1.5rem;
 	height: 1.5rem;
+}
+
+.score {
+	font-family: var(--font-rubik-mono-one), Arial, Helvetica, sans-serif;
+	color: var(--primary);
+	font-size: 2rem;
+	height: 2rem;
 }

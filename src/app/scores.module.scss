@@ -12,9 +12,15 @@
 	font-size: 1.5rem;
 }
 
+.highScore {
+	font-family: var(--font-rubik-mono-one), Arial, Helvetica, sans-serif;
+	color: var(--primary);
+	font-size: 2rem;
+}
+
 .grid {
 	display: grid;
-	width: 50%;
+	width: 75%;
 	grid-template-columns: 1fr;
 	gap: 1rem;
 	padding: 0 1rem;

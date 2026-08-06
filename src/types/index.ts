@@ -25,6 +25,7 @@ export type HighScoreResult = HighScoreEntry & {
   difficulty: Difficulty; // Beginner, Hard, Expert, UNBEATABLE, Star
   modifier: Modifier; // Classic DoubleTime HalfTime
   custom: boolean;
+  isDlc: boolean;
   difficultyName: string | null;
   rating: number;
   averagedRating: number;
@@ -39,6 +40,7 @@ export type SongEntry = {
   level: number;
   songLength: number;
   flavorText: string;
+  isDlc: boolean;
 }
 
 export type ResultGrade = {

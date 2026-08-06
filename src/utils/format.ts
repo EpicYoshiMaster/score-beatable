@@ -1,7 +1,8 @@
-import { HighScoreResult, RatingDisplay } from "@/types";
-import { MAX_COMPLETION_RATING, shouldCountResult } from "./ratings";
+import { HighScoreResult, Modifier, RatingDisplay } from "@/types";
+import { MAX_COMPLETION_RATING } from "./ratings";
 
 const MAX_LENGTH = 40;
+const SCORE_LEADING_PLACES = 6;
 
 export const formatTitle = (title: string) => {
 	if(title.length <= MAX_LENGTH) return title;
@@ -13,12 +14,27 @@ export const formatAccuracy = (accuracy: number): string => {
 	return `${(accuracy * 100).toPrecision(3)}%`;
 }
 
-export const formatResultRating = (result: HighScoreResult, ratingDisplay: RatingDisplay) => {
-	const shouldCount = shouldCountResult(result);
+export const formatModifier = (modifier: Modifier) => {
+	switch(modifier) {
+		case "Classic": return "Classic";
+		case "HalfTime": return "Half Time";
+		case "DoubleTime": return "Double Time";
+		default: return "Unknown";
+	}
+}
 
+export const formatResultRating = (result: HighScoreResult, ratingDisplay: RatingDisplay) => {
 	const rating = ratingDisplay === 'Averaged' ? result.averagedRating : (ratingDisplay === 'Proper' ? MAX_COMPLETION_RATING + result.rating : result.rating);
 
-	return `${formatRating(rating)}${shouldCount ? '' : '*'}`
+	return `${formatRating(rating)}`
+}
+
+export const formatScore = (score: number): string => {
+	const leadingThresholds = [...Array(SCORE_LEADING_PLACES).keys()].map((index) => Math.pow(10, index + 1)) // 10, 100, 1000, ...
+
+	return leadingThresholds.reduce((formattedScore, threshold) => {
+		return score < threshold ? `0${formattedScore}` : formattedScore;
+	}, `${score}`);
 }
 
 export const formatRating = (rating: number): string => {
