@@ -7,7 +7,9 @@ import { processScores } from "@/utils/process";
 import { HighScoreResult } from "@/types";
 import { sortResultsByRating } from "@/utils/sort";
 import { buildRatingTable } from "@/utils/ratings";
-import Scores from "@/components/Scores";
+import Scores from "@/app/Scores";
+import RatingsInfo from "@/app/RatingsInfo";
+import TopCut from "@/app/TopCut";
 
 // tabs: Scores, Top 25, Ratings Info
 // Scores is the main tab which lets you manipulate and view everything in different ways
@@ -39,10 +41,13 @@ const PALETTES = [
   //{ title: "EpicYoshiMaster", primary: "", background: "", detail: "", secondary: "", highlight: "" },
 ];
 
+type PageState = 'scores' | 'top-cut' | 'ratings-info';
+
 export default function Home() {
   const [paletteIndex, setPaletteIndex] = useState(0);//useLocalStorage<number>("paletteIndex", 0);
   const [importError, setImportError] = useState<string | null>(null);
   const [scores, setScores] = useState<HighScoreResult[]>([]);
+  const [pageState, setPageState] = useState<PageState>('scores');
 
   const handleImport = useCallback(async (acceptedFiles: File[]) => {
     if(acceptedFiles.length > 1)
@@ -94,10 +99,6 @@ export default function Home() {
     multiple: false 
   });
 
-  const { headerRow, levelRows } = useMemo(() => {
-    return buildRatingTable('General', true);
-  }, []);
-
   const paletteVariables: React.CSSProperties = useMemo(() => {
     const palette = PALETTES[paletteIndex];
 
@@ -125,6 +126,12 @@ export default function Home() {
           <h1 className={styles.heading}>SCOREBEATABLE</h1>
         </header>
         <main className={styles.main}>
+          <div>
+            <button onClick={() => setPageState('scores')}>Scores</button>
+            <button onClick={() => setPageState('top-cut')}>Top 25</button>
+            <button onClick={() => setPageState('ratings-info')}>Ratings Info</button>
+          </div>
+
           <select className={`${styles.control} ${styles.select}`} value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
             {PALETTES.map((palette, index) => (
               <option key={index} value={`${index}`}>{palette.title}</option>
@@ -139,29 +146,15 @@ export default function Home() {
             <input {...getInputProps()} />
             <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// select your arcade scores file.'}</button>
           </div>
-          <Scores scores={scores} />
-
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                {headerRow.columns.map((value, index) => (
-                  <th className={styles['table__header']} scope="col" key={index}>{value}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-                {levelRows.map((row, rowIndex) => {
-                return (
-                  <tr key={rowIndex}>
-                    <th className={styles['table__header']} scope="row">{row.header}</th>
-                    {row.columns.map((rating, columnIndex) => (
-                      <td className={styles['table__data']} key={columnIndex}>{rating}</td>
-                    ))}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          {pageState === 'scores' && (
+            <Scores scores={scores} />
+          )}
+          {pageState === 'top-cut' && (
+            <TopCut scores={scores} />
+          )}
+          {pageState === 'ratings-info' && (
+            <RatingsInfo scores={scores} />
+          )}
         </main>
       </div>
     </div>

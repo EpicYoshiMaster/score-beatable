@@ -52,6 +52,7 @@ export type Modifier = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
 export type Judgement = 'Miss' | 'Barely' | 'Ok' | 'Good' | 'Great' | 'Perfect' | 'Critical';
 
 export type AccuracyRange = 'General' | 'Middle' | 'Upper' | 'Top';
+export type RatingDisplay = 'Averaged' | 'Total' | 'Proper'; // still not sure on these names
 
 export type TableRow = {
   header: string;

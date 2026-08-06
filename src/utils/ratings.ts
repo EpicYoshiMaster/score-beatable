@@ -10,7 +10,7 @@ const DIFFICULTY_COUNT = 6;
 
 // disclaimer you are awesome dcell i just thought having a really long variable name would be funny
 const ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_SHOW_UP_IN_THE_DATABASE_BUT_IT_DOES_SHOW_IN_VISIBLE_SONGS_EVEN_THOUGH_YOU_LITERALLY_CANNOT_PLAY_IT_WOW_DCELL = 1;
-const MAX_COMPLETION_RATING = 2.0;
+export const MAX_COMPLETION_RATING = 2.0;
 export const RATING_TOP_CUT = 25;
 
 export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.custom && (result.modifier === 'Classic' || result.modifier === 'DoubleTime');
@@ -82,33 +82,43 @@ export const getResultRating = (result: HighScoreResult) => {
 	return getSongRating(result.accuracy, result.level, result.isNoMiss, result.cleared);
 }
 
-export const getTotalSongRating = (results: HighScoreResult[]) => {
-	if(results.length === 0) return 0;
-
-	const relevantResults = results.filter(shouldCountResult);
-
-	const dictionary = relevantResults.reduce((dictionary, result) => {
-		const rating = getResultRating(result);
+const buildResultsDictionary = (results: HighScoreResult[]) => {
+	return results.reduce((dictionary, result) => {
 		const entryAndDifficulty = `${result.entry}/${result.difficulty}`;
 
 		if(!(entryAndDifficulty in dictionary)) {
 			return {
 				...dictionary,
-				[entryAndDifficulty]: rating
+				[entryAndDifficulty]: result
 			}
 		}
 
-		dictionary[entryAndDifficulty] = dictionary[entryAndDifficulty] < rating ? rating : dictionary[entryAndDifficulty];
+		dictionary[entryAndDifficulty] = dictionary[entryAndDifficulty].rating < result.rating ? result : dictionary[entryAndDifficulty];
 
 		return dictionary;
-	}, {} as { [k: string]: number });
+	}, {} as { [k: string]: HighScoreResult });
+}
 
-	const totalRating = Object.entries(dictionary)
-		.sort(([, ratingA], [, ratingB]) => ratingB - ratingA) //descending
+export const getTopCut = (results: HighScoreResult[]) => {
+	if(results.length === 0) return [];
+
+	const relevantResults = results.filter(shouldCountResult);
+	const dictionary = buildResultsDictionary(relevantResults);
+
+	return Object.entries(dictionary)
+		.map(([, result]) => result)
+		.sort((resultA, resultB) => resultB.rating - resultA.rating) //descending
 		.filter((_value, index) => index < RATING_TOP_CUT)
-		.reduce((totalRating, [,rating]) => {
-			return totalRating + rating;
-		}, 0);
+}
+
+export const getTotalSongRating = (results: HighScoreResult[]) => {
+	if(results.length === 0) return 0;
+
+	const topCut = getTopCut(results);
+
+	const totalRating = topCut.reduce((totalRating, result) => {
+		return totalRating + result.rating;
+	}, 0);
 
 	const averagedRating = totalRating / RATING_TOP_CUT;
 
@@ -140,7 +150,7 @@ export const buildRatingTable = (accuracyRange: AccuracyRange, noMiss: boolean) 
 	const levelRows: TableRow[] = levels.map((level) => {
 		return {
 			header: `${level < 10 ? `0${level}` : level}`,
-			columns: accuracies.map((accuracy) => formatRating(2 + getSongRating(accuracy, level, noMiss, true)))
+			columns: accuracies.map((accuracy) => formatRating(MAX_COMPLETION_RATING + getSongRating(accuracy, level, noMiss, true)))
 		}
 	})
 

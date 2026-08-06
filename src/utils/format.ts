@@ -1,5 +1,5 @@
-import { HighScoreResult } from "@/types";
-import { shouldCountResult } from "./ratings";
+import { HighScoreResult, RatingDisplay } from "@/types";
+import { MAX_COMPLETION_RATING, shouldCountResult } from "./ratings";
 
 const MAX_LENGTH = 40;
 
@@ -13,12 +13,14 @@ export const formatAccuracy = (accuracy: number): string => {
 	return `${(accuracy * 100).toPrecision(3)}%`;
 }
 
-export const formatResultRating = (result: HighScoreResult, averagedRating: boolean) => {
+export const formatResultRating = (result: HighScoreResult, ratingDisplay: RatingDisplay) => {
 	const shouldCount = shouldCountResult(result);
 
-	return `${formatRating(averagedRating ? result.averagedRating : result.rating)}${shouldCount ? '' : '*'}`
+	const rating = ratingDisplay === 'Averaged' ? result.averagedRating : (ratingDisplay === 'Proper' ? MAX_COMPLETION_RATING + result.rating : result.rating);
+
+	return `${formatRating(rating)}${shouldCount ? '' : '*'}`
 }
 
 export const formatRating = (rating: number): string => {
-	return rating.toFixed(3);
+	return `${rating < 100 ? '0' : ''}${rating < 10 ? '0' : ''}${rating.toFixed(3)}`;
 }

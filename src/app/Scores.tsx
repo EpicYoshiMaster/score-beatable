@@ -9,7 +9,6 @@ interface ScoresProps {
 }
 
 const Scores: React.FC<ScoresProps> = ({ scores }) => {
-
 	const combinedHighScore = useMemo(() => {
 			return getCombinedHighScore(scores);
 		}, [scores]);
@@ -26,7 +25,6 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
 			return completionRating + songRating;
 		}, [completionRating, songRating]);
 
-
 	return (
 		<>
 			<div>
@@ -42,7 +40,7 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
             <span>{score.resultGrade.grade}</span>
             <span>{score.score}</span>
             <span>{formatAccuracy(score.accuracy)}</span>
-            <span>{formatResultRating(score, true)}</span>
+            <span>{formatResultRating(score, 'Averaged')}</span>
           </div>
         )
       })}

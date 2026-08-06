@@ -1,0 +1,12 @@
+.table {
+
+	&__header {
+		color: var(--secondary);
+
+		border: 1px solid var(--highlight);
+	}
+
+	&__data {
+		border: 1px solid var(--highlight);
+	}
+}
