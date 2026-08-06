@@ -36,6 +36,9 @@ export type SongEntry = {
   difficulty: string;
   artist: string;
   creator: string;
+  level: number;
+  songLength: number;
+  flavorText: string;
 }
 
 export type ResultGrade = {
@@ -54,7 +57,12 @@ export type Judgement = 'Miss' | 'Barely' | 'Ok' | 'Good' | 'Great' | 'Perfect' 
 export type AccuracyRange = 'General' | 'Middle' | 'Upper' | 'Top';
 export type RatingDisplay = 'Averaged' | 'Total' | 'Proper'; // still not sure on these names
 
+export type HeaderRow = {
+  header: string;
+  columns: string[]; 
+}
+
 export type TableRow = {
   header: string;
-  columns: string[];
+  columns: number[];
 }

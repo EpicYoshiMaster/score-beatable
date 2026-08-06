@@ -1,5 +1,5 @@
 // Based on Ratings as of 2.2.1 (PlayerStatsHelper.cs)
-import { AccuracyRange, HighScoreResult, SongEntry, TableRow } from "@/types";
+import { AccuracyRange, HeaderRow, HighScoreResult, SongEntry, TableRow } from "@/types";
 import songs from "@/data/songs.json";
 import { difficultyToNumber } from "./sort";
 import { getGradeCoefArcade } from "./grades";
@@ -142,7 +142,7 @@ export const buildRatingTable = (accuracyRange: AccuracyRange, noMiss: boolean) 
 		case 'Top': accuracies = TOP_ACCURACIES; break;
 	}
 
-	const headerRow: TableRow = {
+	const headerRow: HeaderRow = {
 		header: '',
 		columns: ['LV / ACC'].concat(accuracies.map((accuracy) => formatAccuracy(accuracy)))
 	}
@@ -150,7 +150,7 @@ export const buildRatingTable = (accuracyRange: AccuracyRange, noMiss: boolean) 
 	const levelRows: TableRow[] = levels.map((level) => {
 		return {
 			header: `${level < 10 ? `0${level}` : level}`,
-			columns: accuracies.map((accuracy) => formatRating(MAX_COMPLETION_RATING + getSongRating(accuracy, level, noMiss, true)))
+			columns: accuracies.map((accuracy) => getSongRating(accuracy, level, noMiss, true))
 		}
 	})
 

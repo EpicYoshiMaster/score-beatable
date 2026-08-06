@@ -45,3 +45,9 @@ export const sortResultsByAccuracy = (a: HighScoreResult, b: HighScoreResult, re
 export const sortResultsByRating = (a: HighScoreResult, b: HighScoreResult) => {
 	return b.rating - a.rating;
 }
+
+export const sortResultsByLevel = (a: HighScoreResult, b: HighScoreResult) => {
+	if(a.level === b.level) return sortResultsByAccuracy(a, b, true);
+
+	return b.level - a.level;
+}

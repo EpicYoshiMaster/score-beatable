@@ -1,8 +1,9 @@
 import { HighScoreResult } from "@/types";
-import { getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
+import { getCombinedHighScore, getCompletionRating, getTotalSongRating, shouldCountResult } from "@/utils/ratings";
 import { useMemo } from "react";
 import styles from "./scores.module.scss";
 import { formatAccuracy, formatRating, formatResultRating, formatTitle } from "@/utils/format";
+import Result from "@/components/Result";
 
 interface ScoresProps {
 	scores: HighScoreResult[];
@@ -33,7 +34,14 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
       <div className={styles.rating}>
         {formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
       </div>
-      {scores.map((score, index) => {
+			<div className={styles.grid}>
+				{scores.filter(shouldCountResult).map((score, index) => {
+					return (
+						<Result result={score} key={index} ratingDisplay="Proper" />
+					)
+				})}
+			</div>
+      {/*scores.map((score, index) => {
         return (
           <div className={styles.score} key={index}>
             <span>{score.level}: {formatTitle(score.title)} - {score.difficultyName} ({score.modifier})</span>
@@ -43,7 +51,7 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
             <span>{formatResultRating(score, 'Averaged')}</span>
           </div>
         )
-      })}
+      })*/}
 		</>
 	);
 }

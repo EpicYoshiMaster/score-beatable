@@ -1,12 +1,15 @@
-.table {
+.table {}
 
-	&__header {
-		color: var(--secondary);
+.header {
+	color: var(--secondary);
 
-		border: 1px solid var(--highlight);
-	}
+	border: 1px solid var(--highlight);
+}
 
-	&__data {
-		border: 1px solid var(--highlight);
-	}
+.data {
+	border: 1px solid var(--highlight);
+}
+
+.highlight {
+	color: var(--detail);
 }

@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
 import { processScores } from "@/utils/process";
 import { HighScoreResult } from "@/types";
-import { sortResultsByRating } from "@/utils/sort";
+import { sortResultsByLevel, sortResultsByRating } from "@/utils/sort";
 import { buildRatingTable } from "@/utils/ratings";
 import Scores from "@/app/Scores";
 import RatingsInfo from "@/app/RatingsInfo";
@@ -77,7 +77,7 @@ export default function Home() {
       if(importedJSON.highScores) {
           const processedScores = processScores(importedJSON.highScores);
 
-          setScores(processedScores.sort((a, b) => sortResultsByRating(a,b)));
+          setScores(processedScores.sort((a, b) => sortResultsByLevel(a,b)));
 
           setImportError(null);
         }
