@@ -1,4 +1,4 @@
-import { HighScoreResult, RatingDisplay } from "@/types";
+import { Difficulty, HighScoreResult, RatingDisplay } from "@/types";
 import { MAX_COMPLETION_RATING } from "./ratings";
 
 const MAX_LENGTH = 40;
@@ -18,6 +18,18 @@ export const formatResultRating = (result: HighScoreResult, ratingDisplay: Ratin
 	const rating = ratingDisplay === 'Averaged' ? result.averagedRating : (ratingDisplay === 'Proper' ? MAX_COMPLETION_RATING + result.rating : result.rating);
 
 	return `${formatRating(rating)}`
+}
+
+export const formatDifficulty = (difficulty: Difficulty): string => {
+	switch(difficulty) {
+		case 'Beginner': return 'Beginner';
+		case 'Easy': return 'Normal';
+		case 'Normal': return 'Hard';
+		case 'Hard': return 'Expert';
+		case 'UNBEATABLE': return 'UNBEATABLE';
+		case 'Star': return 'Star';
+		default: return difficulty;
+	}
 }
 
 export const formatScore = (score: number): string => {

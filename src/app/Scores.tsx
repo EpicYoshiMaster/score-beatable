@@ -1,8 +1,8 @@
-import { ClearState, HighScoreResult, Modifier, SongType } from "@/types";
+import { ClearState, Difficulty, Grade, HighScoreResult, Modifier, SongType } from "@/types";
 import { getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
 import { useMemo } from "react";
 import styles from "./scores.module.scss";
-import {formatRating } from "@/utils/format";
+import {formatDifficulty, formatRating } from "@/utils/format";
 import Result from "@/components/Result";
 import useListState from "@/hooks/useListState";
 import { toHeaderCase } from "js-convert-case";
@@ -11,30 +11,33 @@ interface ScoresProps {
 	scores: HighScoreResult[];
 }
 
-// Filter by:
-// Modifiers, [Uncleared, Cleared, Full Cleared, PFC], [Base Game, DLC, Custom]
-
 // Sort by:
 // Accuracy, Score, Rating, Level, Artist, Charter, Song Title
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['Classic', 'HalfTime', 'DoubleTime'];
+const TOGGLEABLE_DIFFICULTIES: Difficulty[] = ['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star'];
+const TOGGLEABLE_GRADES: Grade[] = ['HOW?', 'F', 'D', 'C', 'B', 'A', 'S', 'S+', 'S++'];
 const TOGGLEABLE_CLEAR_STATES: ClearState[] = ['Fail', 'Clear', 'FullCombo', 'PerfectFullCombo'];
 const TOGGLEABLE_SONG_TYPES: SongType[] = ['Base', 'DLC', 'Custom'];
 
 const Scores: React.FC<ScoresProps> = ({ scores }) => {
 	const [shownModifiers, toggleModifier] = useListState<Modifier>(['Classic', 'HalfTime', 'DoubleTime']);
+	const [shownDifficulties, toggleDifficulty] = useListState<Difficulty>(['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star']);
+	const [shownGrades, toggleGrade] = useListState<Grade>(['HOW?', 'F', 'D', 'C', 'B', 'A', 'S', 'S+', 'S++']);
 	const [shownClearStates, toggleClearState] = useListState<ClearState>(['Clear', 'FullCombo', 'PerfectFullCombo']);
 	const [shownSongTypes, toggleSongType] = useListState<SongType>(['Base', 'DLC']);
 
 	const relevantScores = useMemo(() => {
 		return scores.filter((score) => {
 			const matchesModifier = shownModifiers.includes(score.modifier);
+			const matchesDifficulty = shownDifficulties.includes(score.difficulty);
+			const matchesGrade = shownGrades.includes(score.resultGrade.grade);
 			const matchesClearState = shownClearStates.includes(score.clearState);
 			const matchesSongType = shownSongTypes.includes(score.songType);
 
-			return matchesModifier && matchesClearState && matchesSongType;
+			return matchesModifier && matchesDifficulty && matchesGrade && matchesClearState && matchesSongType;
 		})
-	}, [scores, shownClearStates, shownModifiers, shownSongTypes]);
+	}, [scores, shownClearStates, shownDifficulties, shownGrades, shownModifiers, shownSongTypes]);
 
 	const combinedHighScore = useMemo(() => {
 		return getCombinedHighScore(relevantScores);
@@ -70,6 +73,32 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
 								name={modifier} 
 								checked={shownModifiers.includes(modifier)} 
 								onChange={() => toggleModifier(modifier)}
+							/>
+						</div>
+					))}
+				</div>
+				<div>
+					{TOGGLEABLE_DIFFICULTIES.map((difficulty, index) => (
+						<div key={index}>
+							<label htmlFor={difficulty}>{formatDifficulty(difficulty)}</label>
+							<input 
+								type="checkbox" 
+								name={difficulty} 
+								checked={shownDifficulties.includes(difficulty)} 
+								onChange={() => toggleDifficulty(difficulty)}
+							/>
+						</div>
+					))}
+				</div>
+				<div>
+					{TOGGLEABLE_GRADES.map((grade, index) => (
+						<div key={index}>
+							<label htmlFor={grade}>{grade}</label>
+							<input 
+								type="checkbox" 
+								name={grade} 
+								checked={shownGrades.includes(grade)} 
+								onChange={() => toggleGrade(grade)}
 							/>
 						</div>
 					))}
