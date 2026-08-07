@@ -45,6 +45,17 @@ const getClearState = (scoreEntry: HighScoreEntry): ClearState => {
 	return 'Clear';
 }
 
+const UNKNOWN_SONG_ENTRY: SongEntry = {
+	title: '',
+	difficulty: '',
+	artist: '',
+	creator: '',
+	level: -1,
+	songLength: -1,
+	flavorText: '',
+	isDlc: false,
+}
+
 export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult[] => {
 	return highScoresData.map((score) => {
 
@@ -53,18 +64,20 @@ export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult
 		const entryAndDifficulty = `${songFields.entry}/${songFields.difficulty}`;
 		const songDatabase = songs as { [key: string]: SongEntry };
 
+		const songEntry: SongEntry = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty] : UNKNOWN_SONG_ENTRY;
+
 		// Several charts in score data have levels that don't match what is in-game :(
 		const level = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].level : score.level;
 
-		const title = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].title : songFields.entry;
+		const title = songFields.entry;
 		const isCustom = title.startsWith("CUSTOM_");
 		const isDlc = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].isDlc : false;
-		const difficultyName = entryAndDifficulty in songDatabase ? songDatabase[entryAndDifficulty].difficulty : songFields.difficulty;
+		const songType: SongType = isCustom ? 'Custom' : (isDlc ? 'DLC' : 'Base');
+		
 		const resultGrade = getGrade(score.accuracy, score.isNoMiss, score.cleared);
 		const rating = getSongRating(score.accuracy, level, score.isNoMiss, score.cleared);
 		const averagedRating = rating / RATING_TOP_CUT;
 		const clearState = getClearState(score);
-		const songType: SongType = isCustom ? 'Custom' : (isDlc ? 'DLC' : 'Base');
 
 		return {
 			...score,
@@ -72,13 +85,13 @@ export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult
 			title,
 			isCustom,
 			isDlc,
-			difficultyName,
 			resultGrade,
 			rating,
 			averagedRating,
 			level,
 			clearState,
-			songType
+			songType,
+			songEntry
 		};
 	});
 }

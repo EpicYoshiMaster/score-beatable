@@ -1,7 +1,7 @@
 // Based on Ratings as of 2.2.1 (PlayerStatsHelper.cs)
 import { AccuracyRange, HeaderRow, HighScoreResult, SongEntry, TableRow } from "@/types";
 import songs from "@/data/songs.json";
-import { difficultyToNumber } from "./sort";
+import { difficultyToNumber, sortResultsByRating } from "./sort";
 import { getGradeCoefArcade } from "./grades";
 import { formatAccuracy, formatRating } from "./format";
 
@@ -108,7 +108,7 @@ export const getTopCut = (results: HighScoreResult[], includeDlc: boolean = true
 
 	return Object.entries(dictionary)
 		.map(([, result]) => result)
-		.sort((resultA, resultB) => resultB.rating - resultA.rating) //descending
+		.sort(sortResultsByRating)
 		.filter((_value, index) => index < RATING_TOP_CUT)
 }
 
@@ -151,7 +151,11 @@ export const buildRatingTable = (accuracyRange: AccuracyRange, noMiss: boolean) 
 	const levelRows: TableRow[] = levels.map((level) => {
 		return {
 			header: `${level < 10 ? `0${level}` : level}`,
-			columns: accuracies.map((accuracy) => getSongRating(accuracy, level, noMiss, true))
+			columns: accuracies.map((accuracy) => { 
+				const rating = getSongRating(accuracy, level, noMiss, true);
+
+				return { averagedRating: rating / RATING_TOP_CUT, rating };
+			})
 		}
 	})
 

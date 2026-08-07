@@ -1,17 +1,17 @@
 import { HighScoreResult, RatingDisplay } from "@/types";
-import { getCombinedHighScore, getCompletionRating, getTopCut, getTotalSongRating } from "@/utils/ratings";
+import { getCompletionRating, getTopCut, getTotalSongRating } from "@/utils/ratings";
 import { useMemo, useState } from "react";
 import styles from "./top-cut.module.scss";
-import { formatAccuracy, formatRating, formatResultRating, formatTitle } from "@/utils/format";
+import { formatRating } from "@/utils/format";
 import Result from "@/components/Result";
 
 interface TopCutProps {
 	scores: HighScoreResult[];
+	ratingDisplay: RatingDisplay;
 }
 
-const TopCut: React.FC<TopCutProps> = ({ scores }) => {
+const TopCut: React.FC<TopCutProps> = ({ scores, ratingDisplay }) => {
 	const [includeDlc, setIncludeDlc] = useState(true);
-	const [ratingDisplay, setRatingDisplay] = useState<RatingDisplay>('Proper');
 
 	const completionRating = useMemo(() => {
 		return getCompletionRating(scores, includeDlc);
@@ -34,11 +34,6 @@ const TopCut: React.FC<TopCutProps> = ({ scores }) => {
 			<div>
 				<label htmlFor="includeDlc">Include DLC in Ratings</label>
 				<input type="checkbox" checked={includeDlc} onChange={() => setIncludeDlc(!includeDlc)} />
-			</div>
-			<div>
-				<button onClick={() => setRatingDisplay('Averaged')}>Averaged</button>
-				<button onClick={() => setRatingDisplay('Total')}>Total</button>
-				<button onClick={() => setRatingDisplay('Proper')}>Proper</button>
 			</div>
 			<div className={styles.rating}>
 				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}

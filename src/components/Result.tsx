@@ -13,20 +13,34 @@ interface ResultProps {
 const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 	const shouldCount = shouldCountResult(result);
 	const modifierText = result.modifier === "Classic" ? '' : `[${toHeaderCase(result.modifier)}]${shouldCount ? '' : '*'}`;
+	const title = result.songEntry.title === '' ? result.title : result.songEntry.title;
+	const difficultyName = result.songEntry.difficulty === '' ? result.difficulty : result.songEntry.difficulty;
 
 	return (
 		<div className={styles.container}>
 			<div className={styles.title}>
 				<span>
-					{`${formatTitle(result.title)}`}
+					{`${formatTitle(title)}`}
 				</span>
 				{detailed && (<span className={styles.modifier}>
 					{modifierText}
 				</span>)}
 			</div>
+			{detailed && result.songEntry.artist !== '' && (
+				<div className={styles.metadata}>
+					<span className={styles.bold}>Artist:</span>
+					<span>{result.songEntry.artist}</span>
+				</div>
+			)}
+			{detailed && result.songEntry.creator !== '' && (
+				<div className={styles.metadata}>
+					<span className={styles.bold}>Charted By:</span>
+					<span>{result.songEntry.creator}</span>
+				</div>
+			)}
 			<div className={styles.bottom}>
 				<div className={styles.left}>
-					<div className={styles.difficulty}>{result.difficultyName}</div>
+					<div className={styles.difficulty}>{difficultyName}</div>
 					<div className={styles.level}>{result.level}</div>
 				</div>
 				<div className={styles.right}>

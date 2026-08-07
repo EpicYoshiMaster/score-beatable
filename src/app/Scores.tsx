@@ -1,18 +1,17 @@
-import { ClearState, Difficulty, Grade, HighScoreResult, Modifier, SongType } from "@/types";
+import { ClearState, Difficulty, Grade, HighScoreResult, Modifier, RatingDisplay, SongType } from "@/types";
 import { getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import styles from "./scores.module.scss";
 import {formatDifficulty, formatRating } from "@/utils/format";
 import Result from "@/components/Result";
 import useListState from "@/hooks/useListState";
 import { toHeaderCase } from "js-convert-case";
+import { SORT_METHODS } from "@/utils/sort";
 
 interface ScoresProps {
 	scores: HighScoreResult[];
+	ratingDisplay: RatingDisplay;
 }
-
-// Sort by:
-// Accuracy, Score, Rating, Level, Artist, Charter, Song Title
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['Classic', 'HalfTime', 'DoubleTime'];
 const TOGGLEABLE_DIFFICULTIES: Difficulty[] = ['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star'];
@@ -20,12 +19,17 @@ const TOGGLEABLE_GRADES: Grade[] = ['HOW?', 'F', 'D', 'C', 'B', 'A', 'S', 'S+', 
 const TOGGLEABLE_CLEAR_STATES: ClearState[] = ['Fail', 'Clear', 'FullCombo', 'PerfectFullCombo'];
 const TOGGLEABLE_SONG_TYPES: SongType[] = ['Base', 'DLC', 'Custom'];
 
-const Scores: React.FC<ScoresProps> = ({ scores }) => {
-	const [shownModifiers, toggleModifier] = useListState<Modifier>(['Classic', 'HalfTime', 'DoubleTime']);
+const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
+	const [shownModifiers, toggleModifier] = useListState<Modifier>(['Classic']);
 	const [shownDifficulties, toggleDifficulty] = useListState<Difficulty>(['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star']);
 	const [shownGrades, toggleGrade] = useListState<Grade>(['HOW?', 'F', 'D', 'C', 'B', 'A', 'S', 'S+', 'S++']);
 	const [shownClearStates, toggleClearState] = useListState<ClearState>(['Clear', 'FullCombo', 'PerfectFullCombo']);
 	const [shownSongTypes, toggleSongType] = useListState<SongType>(['Base', 'DLC']);
+
+	const [primarySort, setPrimarySort] = useState<number>(0); // Rating
+	const [secondarySort, setSecondarySort] = useState<number>(2); // Level
+	const [reversePrimary, setReversePrimary] = useState(false);
+	const [reverseSecondary, setReverseSecondary] = useState(false);
 
 	const relevantScores = useMemo(() => {
 		return scores.filter((score) => {
@@ -36,8 +40,18 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
 			const matchesSongType = shownSongTypes.includes(score.songType);
 
 			return matchesModifier && matchesDifficulty && matchesGrade && matchesClearState && matchesSongType;
+		}).sort((scoreA, scoreB) => {
+			const primarySortResult = SORT_METHODS[primarySort].function(scoreA, scoreB);
+
+			if(primarySortResult === 0) {
+				const secondarySortResult = SORT_METHODS[secondarySort].function(scoreA, scoreB);
+
+				return reverseSecondary ? secondarySortResult * -1 : secondarySortResult;
+			}
+
+			return reversePrimary ? primarySortResult * -1 : primarySortResult;
 		})
-	}, [scores, shownClearStates, shownDifficulties, shownGrades, shownModifiers, shownSongTypes]);
+	}, [primarySort, reversePrimary, reverseSecondary, scores, secondarySort, shownClearStates, shownDifficulties, shownGrades, shownModifiers, shownSongTypes]);
 
 	const combinedHighScore = useMemo(() => {
 		return getCombinedHighScore(relevantScores);
@@ -130,10 +144,29 @@ const Scores: React.FC<ScoresProps> = ({ scores }) => {
 					))}
 				</div>
 			</div>
+			<div className={styles.filters}>
+				<label htmlFor="primary-sort">Primary Sort</label>
+				<select name="primary-sort" value={primarySort} onChange={(event) => setPrimarySort(Number(event.target.value))}>
+					{SORT_METHODS.map((method, index) => (
+						<option key={index} value={index}>{method.name}</option>
+					))}
+				</select>
+				<label htmlFor="reverse-primary">Reverse</label>
+				<input type="checkbox" checked={reversePrimary} onChange={() => setReversePrimary(!reversePrimary)} />
+				|
+				<label htmlFor="secondary-sort">Secondary Sort</label>
+				<select name="secondary-sort" value={secondarySort} onChange={(event) => setSecondarySort(Number(event.target.value))}>
+					{SORT_METHODS.map((method, index) => (
+						<option key={index} value={index}>{method.name}</option>
+					))}
+				</select>
+				<label htmlFor="reverse-secondary">Reverse</label>
+				<input type="checkbox" checked={reverseSecondary} onChange={() => setReverseSecondary(!reverseSecondary)} />
+			</div>
 			<div className={styles.grid}>
 				{relevantScores.map((score, index) => {
 					return (
-						<Result result={score} key={index} ratingDisplay="Proper" detailed />
+						<Result result={score} key={index} ratingDisplay={ratingDisplay} detailed />
 					)
 				})}
 			</div>

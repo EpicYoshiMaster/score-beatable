@@ -26,7 +26,7 @@ export type HighScoreResult = HighScoreEntry & {
   modifier: Modifier; // Classic DoubleTime HalfTime
   isCustom: boolean;
   isDlc: boolean;
-  difficultyName: string | null;
+  songEntry: SongEntry;
   rating: number;
   averagedRating: number;
   resultGrade: ResultGrade;
@@ -62,6 +62,7 @@ export type SongType = 'Base' | 'DLC' | 'Custom';
 
 export type AccuracyRange = 'General' | 'Middle' | 'Upper' | 'Top';
 export type RatingDisplay = 'Averaged' | 'Total' | 'Proper'; // still not sure on these names
+export type SortType = 'rating' | 'accuracy' | 'level' | 'difficulty' | 'score' | 'title' | 'artist' | 'creator';
 
 export type HeaderRow = {
   header: string;
@@ -70,5 +71,19 @@ export type HeaderRow = {
 
 export type TableRow = {
   header: string;
-  columns: number[];
+  columns: { averagedRating: number, rating: number }[];
+}
+
+export type SortMethod = {
+  name: string;
+  value: SortType;
+  function: (a: HighScoreResult, b: HighScoreResult) => number;
+}
+
+export type DisplayThreshold = {
+  ratingDisplay: RatingDisplay;
+  default: number;
+  min: number;
+  max: number;
+  step: number;
 }

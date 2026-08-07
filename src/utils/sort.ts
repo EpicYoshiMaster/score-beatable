@@ -1,4 +1,4 @@
-import { Difficulty, HighScoreResult } from "@/types";
+import { Difficulty, HighScoreResult, SortMethod } from "@/types";
 
 export const difficultyToNumber = (difficulty: Difficulty) => {
 	switch(difficulty) {
@@ -16,38 +16,58 @@ export const difficultyToNumber = (difficulty: Difficulty) => {
 	}
 }
 
-export const sortResultsByDifficulty = (a: HighScoreResult, b: HighScoreResult, reverse?: boolean) => {
-	if(reverse) {
-		return difficultyToNumber(b.difficulty) - difficultyToNumber(a.difficulty)
-	}
-
-	return difficultyToNumber(a.difficulty) - difficultyToNumber(b.difficulty);
-}
-
-export const sortResultsByTitle = (a: HighScoreResult, b: HighScoreResult) => {
-	const upperA = a.title.toUpperCase();
-	const upperB = b.title.toUpperCase();
+const sortByString = (a: string, b: string) => {
+	const upperA = a.toUpperCase();
+	const upperB = b.toUpperCase();
 
 	if(upperA < upperB) return -1;
 	if(upperA > upperB) return 1;
 
-	return sortResultsByDifficulty(a, b, true);
-}
-
-export const sortResultsByScore = (a: HighScoreResult, b: HighScoreResult, reverse?: boolean) => {
-	return reverse ? b.score - a.score : a.score - b.score;
-}
-
-export const sortResultsByAccuracy = (a: HighScoreResult, b: HighScoreResult, reverse?: boolean) => {
-	return reverse ? b.accuracy - a.accuracy : a.accuracy - b.accuracy;
+	return 0;
 }
 
 export const sortResultsByRating = (a: HighScoreResult, b: HighScoreResult) => {
 	return b.rating - a.rating;
 }
 
-export const sortResultsByLevel = (a: HighScoreResult, b: HighScoreResult) => {
-	if(a.level === b.level) return sortResultsByAccuracy(a, b, true);
+export const sortResultsByAccuracy = (a: HighScoreResult, b: HighScoreResult) => {
+	return b.accuracy - a.accuracy;
+}
 
+export const sortResultsByLevel = (a: HighScoreResult, b: HighScoreResult) => {
 	return b.level - a.level;
 }
+
+export const sortResultsByDifficulty = (a: HighScoreResult, b: HighScoreResult) => {
+	return difficultyToNumber(b.difficulty) - difficultyToNumber(a.difficulty)
+}
+
+export const sortResultsByScore = (a: HighScoreResult, b: HighScoreResult) => {
+	return b.score - a.score;
+}
+
+export const sortResultsByTitle = (a: HighScoreResult, b: HighScoreResult) => {
+	const titleA = a.songEntry.title === '' ? a.title : a.songEntry.title;
+	const titleB = b.songEntry.title === '' ? b.title : b.songEntry.title;
+
+	return sortByString(titleA, titleB);
+}
+
+export const sortResultsByArtist = (a: HighScoreResult, b: HighScoreResult) => {
+	return sortByString(a.songEntry.artist, b.songEntry.artist);
+}
+
+export const sortResultsByCreator = (a: HighScoreResult, b: HighScoreResult) => {
+	return sortByString(a.songEntry.creator, b.songEntry.creator);
+}
+
+export const SORT_METHODS: SortMethod[] = [
+	{ name: 'Rating', value: 'rating', function: sortResultsByRating },
+	{ name: 'Accuracy', value: 'accuracy', function: sortResultsByAccuracy },
+	{ name: 'Level', value: 'level', function: sortResultsByLevel },
+	{ name: 'Difficulty', value: 'difficulty', function: sortResultsByDifficulty },
+	{ name: 'Score', value: 'score', function: sortResultsByScore },
+	{ name: 'Song Title', value: 'title', function: sortResultsByTitle },
+	{ name: 'Artist', value: 'artist', function: sortResultsByArtist },
+	{ name: 'Charted By', value: 'creator', function: sortResultsByCreator },
+];

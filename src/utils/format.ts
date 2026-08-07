@@ -1,4 +1,4 @@
-import { Difficulty, HighScoreResult, RatingDisplay } from "@/types";
+import { Difficulty, RatingDisplay } from "@/types";
 import { MAX_COMPLETION_RATING } from "./ratings";
 
 const MAX_LENGTH = 60;
@@ -14,10 +14,14 @@ export const formatAccuracy = (accuracy: number): string => {
 	return `${(accuracy * 100).toPrecision(3)}%`;
 }
 
-export const formatResultRating = (result: HighScoreResult, ratingDisplay: RatingDisplay) => {
-	const rating = ratingDisplay === 'Averaged' ? result.averagedRating : (ratingDisplay === 'Proper' ? MAX_COMPLETION_RATING + result.rating : result.rating);
+export const getDisplayedRating = ({ averagedRating, rating }: { averagedRating: number, rating: number }, ratingDisplay: RatingDisplay) => {
+	const finalRating = ratingDisplay === 'Averaged' ? averagedRating : (ratingDisplay === 'Proper' ? MAX_COMPLETION_RATING + rating : rating);
 
-	return `${formatRating(rating)}`
+	return finalRating;
+}
+
+export const formatResultRating = ({ averagedRating, rating }: { averagedRating: number, rating: number }, ratingDisplay: RatingDisplay) => {
+	return `${formatRating(getDisplayedRating({ averagedRating, rating }, ratingDisplay))}`
 }
 
 export const formatDifficulty = (difficulty: Difficulty): string => {

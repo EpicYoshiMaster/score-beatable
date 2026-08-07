@@ -1,33 +1,36 @@
-import { AccuracyRange, HighScoreResult } from "@/types";
+import { AccuracyRange, DisplayThreshold, HighScoreResult, RatingDisplay } from "@/types";
 import { buildRatingTable, getCombinedHighScore, getCompletionRating, getTotalSongRating, MAX_COMPLETION_RATING } from "@/utils/ratings";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./ratings-info.module.scss";
-import { formatRating } from "@/utils/format";
+import { formatRating, formatResultRating, getDisplayedRating } from "@/utils/format";
 
 interface RatingsInfoProps {
-	scores: HighScoreResult[];
+	ratingDisplay: RatingDisplay;
 }
 
-const RatingsInfo: React.FC<RatingsInfoProps> = ({ scores }) => {
+const DISPLAY_THRESHOLDS: DisplayThreshold[] = [
+	{ ratingDisplay: 'Averaged', default: 0.3, min: 0, max: 0.5, step: 0.01 },
+	{ ratingDisplay: 'Total', default: 8.0, min: 0, max: 12, step: 0.1 },
+	{ ratingDisplay: 'Proper', default: 10.0, min: 0, max: 14, step: 0.1 },
+];
+
+const RatingsInfo: React.FC<RatingsInfoProps> = ({ ratingDisplay }) => {
 	const [ratingThreshold, setRatingThreshold] = useState(10.0);
 	const [noMiss, setNoMiss] = useState(true);
 	const [accuracyRange, setAccuracyRange] = useState<AccuracyRange>('General');
+	const [prevRatingDisplay, setPrevRatingDisplay] = useState('');
 
-	const combinedHighScore = useMemo(() => {
-		return getCombinedHighScore(scores);
-	}, [scores]);
+	const displayThreshold = useMemo(() => {
+		return DISPLAY_THRESHOLDS.find((threshold) => threshold.ratingDisplay === ratingDisplay);
+	}, [ratingDisplay])
 
-	const completionRating = useMemo(() => {
-		return getCompletionRating(scores);
-	}, [scores]);
+	if(ratingDisplay !== prevRatingDisplay) {
+		if(displayThreshold) {
+			setRatingThreshold(displayThreshold.default);
+		}
 
-	const songRating = useMemo(() => {
-		return getTotalSongRating(scores);
-	}, [scores]);
-
-	const playerRating = useMemo(() => {
-		return completionRating + songRating;
-	}, [completionRating, songRating]);
+		setPrevRatingDisplay(ratingDisplay);
+	}
 
 	const { headerRow, levelRows } = useMemo(() => {
 		return buildRatingTable(accuracyRange, noMiss);
@@ -38,9 +41,9 @@ const RatingsInfo: React.FC<RatingsInfoProps> = ({ scores }) => {
 			<input
 				id="threshold"
 				type="number"
-				step="0.1"
-				min="0"
-				max="14"
+				step={displayThreshold?.step}
+				min={displayThreshold?.min}
+				max={displayThreshold?.max}
 				value={ratingThreshold}
 				onChange={(event) => setRatingThreshold(Number(event.target.value))}
 			/>
@@ -67,11 +70,11 @@ const RatingsInfo: React.FC<RatingsInfoProps> = ({ scores }) => {
 						return (
 							<tr key={rowIndex}>
 								<th className={styles.header} scope="row">{row.header}</th>
-								{row.columns.map((rating, columnIndex) => {
+								{row.columns.map((ratingSet, columnIndex) => {
+									const displayedRating = getDisplayedRating(ratingSet, ratingDisplay);
+									const formattedRating = formatResultRating(ratingSet, ratingDisplay);
 
-									const formattedRating = formatRating(MAX_COMPLETION_RATING + rating);
-
-									return (<td className={`${styles.data} ${MAX_COMPLETION_RATING + rating >= ratingThreshold ? styles.highlight : ''}`} key={columnIndex}>{formattedRating}</td>);
+									return (<td className={`${styles.data} ${displayedRating >= ratingThreshold ? styles.highlight : ''}`} key={columnIndex}>{formattedRating}</td>);
 								})}
 							</tr>
 						)

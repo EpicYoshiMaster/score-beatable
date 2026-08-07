@@ -4,7 +4,7 @@ import styles from "./page.module.scss";
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
 import { processScores } from "@/utils/process";
-import { HighScoreResult } from "@/types";
+import { HighScoreResult, RatingDisplay } from "@/types";
 import { sortResultsByLevel, sortResultsByRating } from "@/utils/sort";
 import { buildRatingTable } from "@/utils/ratings";
 import Scores from "@/app/Scores";
@@ -48,6 +48,7 @@ export default function Home() {
   const [importError, setImportError] = useState<string | null>(null);
   const [scores, setScores] = useState<HighScoreResult[]>([]);
   const [pageState, setPageState] = useState<PageState>('scores');
+  const [ratingDisplay, setRatingDisplay] = useState<RatingDisplay>('Proper');
 
   const handleImport = useCallback(async (acceptedFiles: File[]) => {
     if(acceptedFiles.length > 1)
@@ -77,8 +78,7 @@ export default function Home() {
       if(importedJSON.highScores) {
           const processedScores = processScores(importedJSON.highScores);
 
-          setScores(processedScores.sort((a, b) => sortResultsByLevel(a,b)));
-
+          setScores(processedScores);
           setImportError(null);
         }
         else {
@@ -146,14 +146,21 @@ export default function Home() {
             <input {...getInputProps()} />
             <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// select your arcade scores file.'}</button>
           </div>
+
+          <div>
+			    	<button onClick={() => setRatingDisplay('Averaged')}>Averaged</button>
+			    	<button onClick={() => setRatingDisplay('Total')}>Total</button>
+			    	<button onClick={() => setRatingDisplay('Proper')}>Proper</button>
+			    </div>
+
           {pageState === 'scores' && (
-            <Scores scores={scores} />
+            <Scores scores={scores} ratingDisplay={ratingDisplay} />
           )}
           {pageState === 'top-cut' && (
-            <TopCut scores={scores} />
+            <TopCut scores={scores} ratingDisplay={ratingDisplay} />
           )}
           {pageState === 'ratings-info' && (
-            <RatingsInfo scores={scores} />
+            <RatingsInfo ratingDisplay={ratingDisplay} />
           )}
         </main>
       </div>
