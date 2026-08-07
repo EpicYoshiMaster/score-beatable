@@ -1,8 +1,8 @@
-import { AccuracyRange, DisplayThreshold, HighScoreResult, RatingDisplay } from "@/types";
-import { buildRatingTable, getCombinedHighScore, getCompletionRating, getTotalSongRating, MAX_COMPLETION_RATING } from "@/utils/ratings";
-import { useEffect, useMemo, useState } from "react";
+import { AccuracyRange, DisplayThreshold, RatingDisplay } from "@/types";
+import { buildRatingTable } from "@/utils/ratings";
+import { useMemo, useState } from "react";
 import styles from "./ratings-info.module.scss";
-import { formatRating, formatResultRating, getDisplayedRating } from "@/utils/format";
+import { formatResultRating, getDisplayedRating } from "@/utils/format";
 
 interface RatingsInfoProps {
 	ratingDisplay: RatingDisplay;

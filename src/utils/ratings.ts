@@ -3,7 +3,7 @@ import { AccuracyRange, HeaderRow, HighScoreResult, SongEntry, TableRow } from "
 import songs from "@/data/songs.json";
 import { difficultyToNumber, sortResultsByRating } from "./sort";
 import { getGradeCoefArcade } from "./grades";
-import { formatAccuracy, formatRating } from "./format";
+import { formatAccuracy } from "./format";
 
 // Beginner, Easy, Normal, Hard, UNBEATABLE, Star
 const DIFFICULTY_COUNT = 6;

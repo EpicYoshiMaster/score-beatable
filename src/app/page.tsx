@@ -5,8 +5,6 @@ import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
 import { processScores } from "@/utils/process";
 import { HighScoreResult, RatingDisplay } from "@/types";
-import { sortResultsByLevel, sortResultsByRating } from "@/utils/sort";
-import { buildRatingTable } from "@/utils/ratings";
 import Scores from "@/app/Scores";
 import RatingsInfo from "@/app/RatingsInfo";
 import TopCut from "@/app/TopCut";
@@ -15,10 +13,6 @@ import TopCut from "@/app/TopCut";
 // Scores is the main tab which lets you manipulate and view everything in different ways
 // Top 25 gives a simple format optimized to showing what you'd see in-game
 // Rating Info dives into how ratings work, you can tweak the values to see how they change, and view a full table 
-
-// sort by dropdown: score, accuracy, rating, song name (default to averaged rating to show what you'd see in-game)
-// filter: half time, classic, double time, cleared, custom
-// rating vs. averaged rating (what you see in-game)
 
 // mobile: put all the options in a side drawer primary bg style like the game does with option menu
 // regular screen should just focus song results / prose, maybe a title. maybe nav at the top ?
