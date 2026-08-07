@@ -1,7 +1,7 @@
 import { Difficulty, HighScoreResult, RatingDisplay } from "@/types";
 import { MAX_COMPLETION_RATING } from "./ratings";
 
-const MAX_LENGTH = 40;
+const MAX_LENGTH = 60;
 const SCORE_LEADING_PLACES = 6;
 
 export const formatTitle = (title: string) => {

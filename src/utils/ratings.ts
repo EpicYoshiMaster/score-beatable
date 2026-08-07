@@ -15,14 +15,15 @@ export const RATING_TOP_CUT = 25;
 
 export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.isCustom && (result.modifier === 'Classic' || result.modifier === 'DoubleTime');
 
-export const getTotalNumArcadeCharts = () => {
-	return Object.keys(songs).length + ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_SHOW_UP_IN_THE_DATABASE_BUT_IT_DOES_SHOW_IN_VISIBLE_SONGS_EVEN_THOUGH_YOU_LITERALLY_CANNOT_PLAY_IT_WOW_DCELL;
+export const getTotalNumArcadeCharts = (includeDlc: boolean = true) => {
+	return Object.values(songs).filter((song: SongEntry) => includeDlc || !song.isDlc).length 
+		+ ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_SHOW_UP_IN_THE_DATABASE_BUT_IT_DOES_SHOW_IN_VISIBLE_SONGS_EVEN_THOUGH_YOU_LITERALLY_CANNOT_PLAY_IT_WOW_DCELL;
 }
 
-export const getCompletionRating = (results: HighScoreResult[]) => {
-	const base = MAX_COMPLETION_RATING / getTotalNumArcadeCharts();
+export const getCompletionRating = (results: HighScoreResult[], includeDlc: boolean = true) => {
+	const base = MAX_COMPLETION_RATING / getTotalNumArcadeCharts(includeDlc);
 
-	const relevantResults = results.filter(shouldCountResult);
+	const relevantResults = results.filter(shouldCountResult).filter((result) => includeDlc || !result.isDlc);
 
 	const accuracyResultList = relevantResults.reduce((dictionary, result) => {
 		if(!(result.entry in dictionary)) {
@@ -54,10 +55,10 @@ export const getCompletionRating = (results: HighScoreResult[]) => {
 	return Math.min(completionRating, MAX_COMPLETION_RATING);
 }
 
-export const getCombinedHighScore = (results: HighScoreResult[]): number => {
+export const getCombinedHighScore = (results: HighScoreResult[], includeDlc: boolean = true): number => {
 	if(results.length === 0) return 0;
 
-	const relevantResults = results.filter((result) => result.cleared && !result.isCustom);
+	const relevantResults = results.filter((result) => (result.cleared && !result.isCustom) && (includeDlc || !result.isDlc));
 
 	return relevantResults.reduce((totalScore, result) => {
 		return totalScore + result.score;
@@ -99,10 +100,10 @@ const buildResultsDictionary = (results: HighScoreResult[]) => {
 	}, {} as { [k: string]: HighScoreResult });
 }
 
-export const getTopCut = (results: HighScoreResult[]) => {
+export const getTopCut = (results: HighScoreResult[], includeDlc: boolean = true) => {
 	if(results.length === 0) return [];
 
-	const relevantResults = results.filter(shouldCountResult);
+	const relevantResults = results.filter(shouldCountResult).filter((result) => includeDlc || !result.isDlc);
 	const dictionary = buildResultsDictionary(relevantResults);
 
 	return Object.entries(dictionary)
@@ -111,10 +112,10 @@ export const getTopCut = (results: HighScoreResult[]) => {
 		.filter((_value, index) => index < RATING_TOP_CUT)
 }
 
-export const getTotalSongRating = (results: HighScoreResult[]) => {
+export const getTotalSongRating = (results: HighScoreResult[], includeDlc: boolean = true) => {
 	if(results.length === 0) return 0;
 
-	const topCut = getTopCut(results);
+	const topCut = getTopCut(results, includeDlc);
 
 	const totalRating = topCut.reduce((totalRating, result) => {
 		return totalRating + result.rating;

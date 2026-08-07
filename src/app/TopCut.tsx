@@ -10,30 +10,31 @@ interface TopCutProps {
 }
 
 const TopCut: React.FC<TopCutProps> = ({ scores }) => {
+	const [includeDlc, setIncludeDlc] = useState(true);
 	const [ratingDisplay, setRatingDisplay] = useState<RatingDisplay>('Proper');
 
-	const combinedHighScore = useMemo(() => {
-		return getCombinedHighScore(scores);
-	}, [scores]);
-
 	const completionRating = useMemo(() => {
-		return getCompletionRating(scores);
-	}, [scores]);
+		return getCompletionRating(scores, includeDlc);
+	}, [includeDlc, scores]);
 
 	const songRating = useMemo(() => {
-		return getTotalSongRating(scores);
-	}, [scores]);
+		return getTotalSongRating(scores, includeDlc);
+	}, [includeDlc, scores]);
 
 	const playerRating = useMemo(() => {
 		return completionRating + songRating;
 	}, [completionRating, songRating]);
 
 	const topCut = useMemo(() => {
-		return getTopCut(scores);
-	}, [scores]);
+		return getTopCut(scores, includeDlc);
+	}, [includeDlc, scores]);
 
 	return (
 		<>
+			<div>
+				<label htmlFor="includeDlc">Include DLC in Ratings</label>
+				<input type="checkbox" checked={includeDlc} onChange={() => setIncludeDlc(!includeDlc)} />
+			</div>
 			<div>
 				<button onClick={() => setRatingDisplay('Averaged')}>Averaged</button>
 				<button onClick={() => setRatingDisplay('Total')}>Total</button>
