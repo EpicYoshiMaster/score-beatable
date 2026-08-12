@@ -1,5 +1,5 @@
 import { ClearState, Difficulty, Grade, HighScoreResult, Modifier, RatingDisplay, SongType } from "@/types";
-import { getCombinedHighScore, getCompletionRating, getTotalSongRating } from "@/utils/ratings";
+import { getCombinedHighScore, getCompletionRating, getTotalSongRating, getUnplayedArcadeCharts } from "@/utils/ratings";
 import { useMemo, useState } from "react";
 import styles from "./scores.module.scss";
 import {formatDifficulty, formatRating } from "@/utils/format";
@@ -16,7 +16,7 @@ interface ScoresProps {
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['Classic', 'HalfTime', 'DoubleTime'];
 const TOGGLEABLE_DIFFICULTIES: Difficulty[] = ['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star'];
 const TOGGLEABLE_GRADES: Grade[] = ['HOW?', 'F', 'D', 'C', 'B', 'A', 'S', 'S+', 'S++'];
-const TOGGLEABLE_CLEAR_STATES: ClearState[] = ['Fail', 'Clear', 'FullCombo', 'PerfectFullCombo'];
+const TOGGLEABLE_CLEAR_STATES: ClearState[] = ['Unplayed', 'Fail', 'Clear', 'FullCombo', 'PerfectFullCombo'];
 const TOGGLEABLE_SONG_TYPES: SongType[] = ['Base', 'DLC', 'Custom'];
 
 const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
@@ -31,8 +31,12 @@ const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
 	const [reversePrimary, setReversePrimary] = useState(false);
 	const [reverseSecondary, setReverseSecondary] = useState(false);
 
+	const unplayed = useMemo(() => {
+		return getUnplayedArcadeCharts(scores);
+	}, [scores]);
+
 	const relevantScores = useMemo(() => {
-		return scores.filter((score) => {
+		return scores.concat(unplayed).filter((score) => {
 			const matchesModifier = shownModifiers.includes(score.modifier);
 			const matchesDifficulty = shownDifficulties.includes(score.difficulty);
 			const matchesGrade = shownGrades.includes(score.resultGrade.grade);
@@ -51,7 +55,7 @@ const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
 
 			return reversePrimary ? primarySortResult * -1 : primarySortResult;
 		})
-	}, [primarySort, reversePrimary, reverseSecondary, scores, secondarySort, shownClearStates, shownDifficulties, shownGrades, shownModifiers, shownSongTypes]);
+	}, [primarySort, reversePrimary, reverseSecondary, scores, secondarySort, shownClearStates, shownDifficulties, shownGrades, shownModifiers, shownSongTypes, unplayed]);
 
 	const combinedHighScore = useMemo(() => {
 		return getCombinedHighScore(relevantScores);

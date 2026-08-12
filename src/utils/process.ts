@@ -37,7 +37,8 @@ const splitSongField = (song: string): { entry: string, difficulty: Difficulty, 
 	}
 }
 
-const getClearState = (scoreEntry: HighScoreEntry): ClearState => {
+const getClearState = (scoreEntry: HighScoreEntry, isUnplayed = false): ClearState => {
+	if(isUnplayed) return 'Unplayed';
 	if(!scoreEntry.cleared) return 'Fail';
 	if(scoreEntry.isPerfectFullCombo) return 'PerfectFullCombo';
 	if(scoreEntry.isFullCombo) return 'FullCombo';
@@ -56,7 +57,7 @@ const UNKNOWN_SONG_ENTRY: SongEntry = {
 	isDlc: false,
 }
 
-export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult[] => {
+export const processScores = (highScoresData: HighScoreEntry[], isUnplayed = false): HighScoreResult[] => {
 	return highScoresData.map((score) => {
 
 		const songFields = splitSongField(score.song);
@@ -77,7 +78,7 @@ export const processScores = (highScoresData: HighScoreEntry[]): HighScoreResult
 		const resultGrade = getGrade(score.accuracy, score.isNoMiss, score.cleared);
 		const rating = getSongRating(score.accuracy, level, score.isNoMiss, score.cleared);
 		const averagedRating = rating / RATING_TOP_CUT;
-		const clearState = getClearState(score);
+		const clearState = getClearState(score, isUnplayed);
 
 		return {
 			...score,

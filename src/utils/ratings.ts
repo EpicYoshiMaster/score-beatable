@@ -1,9 +1,10 @@
 // Based on Ratings as of 2.2.1 (PlayerStatsHelper.cs)
-import { AccuracyRange, HeaderRow, HighScoreResult, SongEntry, TableRow } from "@/types";
+import { AccuracyRange, HeaderRow, HighScoreEntry, HighScoreResult, SongEntry, TableRow } from "@/types";
 import songs from "@/data/songs.json";
 import { difficultyToNumber, sortResultsByRating } from "./sort";
-import { getGradeCoefArcade } from "./grades";
+import { getGrade, getGradeCoefArcade } from "./grades";
 import { formatAccuracy } from "./format";
+import { processScores } from "./process";
 
 // Beginner, Easy, Normal, Hard, UNBEATABLE, Star
 const DIFFICULTY_COUNT = 6;
@@ -13,11 +14,38 @@ const ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_S
 export const MAX_COMPLETION_RATING = 2.0;
 export const RATING_TOP_CUT = 25;
 
+export const UNPLAYED_ENTRY: HighScoreEntry = {
+	song: '',
+	score: 0,
+	accuracy: 0,
+	maxCombo: 0,
+	level: 0,
+	cleared: false,
+	updateCount: 0,
+	isNoMiss: false,
+	isFullCombo: false,
+	isPerfectFullCombo: false,
+	modifierMask: 0,
+	grade: null,
+	notes: [],
+}
+
 export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.isCustom && (result.modifier === 'Classic' || result.modifier === 'DoubleTime');
 
 export const getTotalNumArcadeCharts = (includeDlc: boolean = true) => {
 	return Object.values(songs).filter((song: SongEntry) => includeDlc || !song.isDlc).length 
 		+ ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_SHOW_UP_IN_THE_DATABASE_BUT_IT_DOES_SHOW_IN_VISIBLE_SONGS_EVEN_THOUGH_YOU_LITERALLY_CANNOT_PLAY_IT_WOW_DCELL;
+}
+
+export const getUnplayedArcadeCharts = (results: HighScoreResult[]): HighScoreResult[] => {
+	const entries: HighScoreEntry[] = Object.entries(songs).filter(([key]: [string, SongEntry]) => {
+		return results.findIndex((result) => `${result.entry}/${result.difficulty}` === key) === -1
+	}).map(([key]) => ({
+		...UNPLAYED_ENTRY,
+		song: `${key}\\Classic`,
+	}));
+
+	return processScores(entries, true);
 }
 
 export const getCompletionRating = (results: HighScoreResult[], includeDlc: boolean = true) => {

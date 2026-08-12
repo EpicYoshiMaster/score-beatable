@@ -14,6 +14,9 @@ import TopCut from "@/app/TopCut";
 // Top 25 gives a simple format optimized to showing what you'd see in-game
 // Rating Info dives into how ratings work, you can tweak the values to see how they change, and view a full table 
 
+// what are the global settings?
+// palette, rating display preference, arcade scores once imported
+
 // mobile: put all the options in a side drawer primary bg style like the game does with option menu
 // regular screen should just focus song results / prose, maybe a title. maybe nav at the top ?
 
@@ -45,39 +48,36 @@ export default function Home() {
   const [ratingDisplay, setRatingDisplay] = useState<RatingDisplay>('Proper');
 
   const handleImport = useCallback(async (acceptedFiles: File[]) => {
-    if(acceptedFiles.length > 1)
-		{
-			setImportError("Only one file can be imported at a time.");
-			return;
-		}
+    if (acceptedFiles.length > 1) {
+      setImportError("Only one file can be imported at a time.");
+      return;
+    }
 
-		if(acceptedFiles.length == 0)
-		{
-			setImportError("An unknown issue occurred while trying to load the file.");
-			return;
-		}
+    if (acceptedFiles.length == 0) {
+      setImportError("An unknown issue occurred while trying to load the file.");
+      return;
+    }
 
-		const [ file ] = acceptedFiles;
+    const [file] = acceptedFiles;
 
-		if(!file.name.endsWith('.json'))
-		{
-			setImportError("Files must end in .json");
-			return;
-		}
+    if (!file.name.endsWith('.json')) {
+      setImportError("Files must end in .json");
+      return;
+    }
 
     try {
       const importedFile = await file.text();
       const importedJSON = JSON.parse(importedFile);
 
-      if(importedJSON.highScores) {
-          const processedScores = processScores(importedJSON.highScores);
+      if (importedJSON.highScores) {
+        const processedScores = processScores(importedJSON.highScores);
 
-          setScores(processedScores);
-          setImportError(null);
-        }
-        else {
-          setImportError("The file provided failed to be matched as an UNBEATABLE high scores file.");
-        }
+        setScores(processedScores);
+        setImportError(null);
+      }
+      else {
+        setImportError("The file provided failed to be matched as an UNBEATABLE high scores file.");
+      }
     }
     catch (error) {
       setImportError(`The scores file could not be read: ${error}.`);
@@ -85,18 +85,18 @@ export default function Home() {
   }, []);
 
   const { getRootProps, getInputProps, open } = useDropzone({
-    onDrop: handleImport, 
-    accept: { 'application/json': ['.json'] }, 
-    noClick: true, 
-    noDrag: true, 
-    noKeyboard: true, 
-    multiple: false 
+    onDrop: handleImport,
+    accept: { 'application/json': ['.json'] },
+    noClick: true,
+    noDrag: true,
+    noKeyboard: true,
+    multiple: false
   });
 
   const paletteVariables: React.CSSProperties = useMemo(() => {
     const palette = PALETTES[paletteIndex];
 
-    if(!palette) return {};
+    if (!palette) return {};
 
     return {
       '--primary': PALETTES[paletteIndex].primary,
@@ -115,48 +115,54 @@ export default function Home() {
       <div aria-hidden className={`${styles.bigText} ${styles.bottomLeft}`}>
         BEATABLE
       </div>
-      <div className={styles['page__content']}>
-        <header>
-          <h1 className={styles.heading}>SCOREBEATABLE</h1>
-        </header>
-        <main className={styles.main}>
-          <div>
-            <button onClick={() => setPageState('scores')}>Scores</button>
-            <button onClick={() => setPageState('top-cut')}>Top 25</button>
-            <button onClick={() => setPageState('ratings-info')}>Ratings Info</button>
-          </div>
+      <div className={styles.container}>
+        <div aria-hidden className={styles.circle} >
+          <div className={styles.circleCut}></div>
+        </div>
+        <div className={styles.content}>
+          <header>
+            <h1 className={styles.heading}>SCOREBEATABLE</h1>
+          </header>
+          <main className={styles.main}>
+            <div>
+              <button onClick={() => setPageState('scores')}>Scores</button>
+              <button onClick={() => setPageState('top-cut')}>Top 25</button>
+              <button onClick={() => setPageState('ratings-info')}>Ratings Info</button>
+            </div>
 
-          <select className={`${styles.control} ${styles.select}`} value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
-            {PALETTES.map((palette, index) => (
-              <option key={index} value={`${index}`}>{palette.title}</option>
-            ))}
-          </select>
+            <select className={`${styles.control} ${styles.select}`} value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
+              {PALETTES.map((palette, index) => (
+                <option key={index} value={`${index}`}>{palette.title}</option>
+              ))}
+            </select>
 
-          {importError && (
-            <div className={styles.alert}>{importError}</div>
-          )}
-          
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// select your arcade scores file.'}</button>
-          </div>
+            {importError && (
+              <div className={styles.alert}>{importError}</div>
+            )}
 
-          <div>
-			    	<button onClick={() => setRatingDisplay('Averaged')}>Averaged</button>
-			    	<button onClick={() => setRatingDisplay('Total')}>Total</button>
-			    	<button onClick={() => setRatingDisplay('Proper')}>Proper</button>
-			    </div>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// select your arcade scores file.'}</button>
+            </div>
+            <p>On Windows, you can find this at <span className={styles.path}>[user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json</span></p>
 
-          {pageState === 'scores' && (
-            <Scores scores={scores} ratingDisplay={ratingDisplay} />
-          )}
-          {pageState === 'top-cut' && (
-            <TopCut scores={scores} ratingDisplay={ratingDisplay} />
-          )}
-          {pageState === 'ratings-info' && (
-            <RatingsInfo ratingDisplay={ratingDisplay} />
-          )}
-        </main>
+            <div>
+              <button onClick={() => setRatingDisplay('Averaged')}>Averaged</button>
+              <button onClick={() => setRatingDisplay('Total')}>Total</button>
+              <button onClick={() => setRatingDisplay('Proper')}>Proper</button>
+            </div>
+
+            {pageState === 'scores' && (
+              <Scores scores={scores} ratingDisplay={ratingDisplay} />
+            )}
+            {pageState === 'top-cut' && (
+              <TopCut scores={scores} ratingDisplay={ratingDisplay} />
+            )}
+            {pageState === 'ratings-info' && (
+              <RatingsInfo ratingDisplay={ratingDisplay} />
+            )}
+          </main>
+        </div>
       </div>
     </div>
   );

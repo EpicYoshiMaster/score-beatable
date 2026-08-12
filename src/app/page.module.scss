@@ -4,22 +4,33 @@
 	background: var(--primary);
 	color: var(--primary);
 	height: 100vh;
+}
 
-	&__content {
-		position: relative;
-		width: 1400px;
-		max-width: 1400px;
-		height: 100%;
-		
-		background: var(--background);
+.container {
+	position: relative;
 
-		margin: 0 auto;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+	background: var(--background);
 
-		overflow: auto;
-	}
+	width: 1400px;
+	max-width: 1400px;
+	height: 100%;
+
+	margin: 0 auto;
+
+	overflow: hidden;
+}
+
+.content {
+	position: relative;
+
+	height: 100%;
+
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	overflow: auto;
 }
 
 .heading {
@@ -57,10 +68,15 @@
 
 	transition: 0.2s linear background-color;
 
-	&:hover, &:active {
+	&:hover,
+	&:active {
 		background-color: var(--highlight);
 		color: var(--background);
 	}
+}
+
+.path {
+	color: var(--highlight);
 }
 
 .select {
@@ -81,7 +97,6 @@
 	padding: 0.5rem;
 	font-size: 1.25rem;
 	letter-spacing: 0.1rem;
-	//font-weight: bold;
 
 	cursor: pointer;
 }
@@ -103,4 +118,32 @@
 .bigText.bottomLeft {
 	bottom: -10rem;
 	left: -3rem;
+}
+
+@keyframes rotate {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.circle {
+	position: absolute;
+	border: 1.25rem solid var(--detail);
+	border-radius: 50%;
+	height: min(35vw, 900px);
+	width: min(35vw, 900px);
+	right: -10%;
+	bottom: -15%;
+
+	--cut-length: 12.5%;
+
+	clip-path: polygon(50% 50%, var(--cut-length) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut-length), 50% 50%);
+
+	animation: rotate 6s steps(18, end) infinite forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.circle {
+		animation: none;
+	}
 }

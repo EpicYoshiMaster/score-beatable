@@ -38,6 +38,7 @@ const RatingsInfo: React.FC<RatingsInfoProps> = ({ ratingDisplay }) => {
 
 	return (
 		<>
+			<p>Explain how Max Completion works</p>
 			<input
 				id="threshold"
 				type="number"
@@ -81,6 +82,7 @@ const RatingsInfo: React.FC<RatingsInfoProps> = ({ ratingDisplay }) => {
 					})}
 				</tbody>
 			</table>
+			<p>Explain how Rating works</p>
 		</>
 	);
 }
