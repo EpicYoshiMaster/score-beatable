@@ -1,16 +1,12 @@
-import { HighScoreResult, RatingDisplay } from "@/types";
-import { getCompletionRating, getTopCut, getTotalSongRating } from "@/utils/ratings";
+import { getCompletionRating, getTopCut, getTotalSongRating } from "~/utils/ratings";
 import { useMemo, useState } from "react";
-import styles from "./top-cut.module.scss";
-import { formatRating } from "@/utils/format";
-import Result from "@/components/Result";
+import { formatRating } from "~/utils/format";
+import Result from "~/components/Result";
+import { useLayoutContext } from "~/hooks/useLayoutContext";
 
-interface TopCutProps {
-	scores: HighScoreResult[];
-	ratingDisplay: RatingDisplay;
-}
+const TopCut: React.FC = () => {
+	const { scores, ratingDisplay } = useLayoutContext();
 
-const TopCut: React.FC<TopCutProps> = ({ scores, ratingDisplay }) => {
 	const [includeDlc, setIncludeDlc] = useState(true);
 
 	const completionRating = useMemo(() => {
@@ -30,22 +26,22 @@ const TopCut: React.FC<TopCutProps> = ({ scores, ratingDisplay }) => {
 	}, [includeDlc, scores]);
 
 	return (
-		<>
+		<div className="top-cut">
 			<div>
 				<label htmlFor="includeDlc">Include DLC in Ratings</label>
 				<input type="checkbox" checked={includeDlc} onChange={() => setIncludeDlc(!includeDlc)} />
 			</div>
-			<div className={styles.rating}>
+			<div className="top-cut__rating">
 				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
 			</div>
-			<div className={styles.grid}>
+			<div className="top-cut__grid">
 				{topCut.map((score, index) => {
 					return (
 						<Result key={index} result={score} ratingDisplay={ratingDisplay} />
 					)
 				})}
 			</div>
-		</>
+		</div>
 	);
 }
 

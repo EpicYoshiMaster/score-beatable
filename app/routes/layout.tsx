@@ -1,13 +1,9 @@
-'use client'
-
-import styles from "./page.module.scss";
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
-import { processScores } from "@/utils/process";
-import { HighScoreResult, RatingDisplay } from "@/types";
-import Scores from "@/app/Scores";
-import RatingsInfo from "@/app/RatingsInfo";
-import TopCut from "@/app/TopCut";
+import { processScores } from "../utils/process";
+import type { HighScoreResult, RatingDisplay } from "~/types";
+import { Link, Outlet } from "react-router";
+import type { LayoutContextType } from "~/hooks/useLayoutContext";
 
 // tabs: Scores, Top 25, Ratings Info
 // Scores is the main tab which lets you manipulate and view everything in different ways
@@ -38,13 +34,17 @@ const PALETTES = [
   //{ title: "EpicYoshiMaster", primary: "", background: "", detail: "", secondary: "", highlight: "" },
 ];
 
-type PageState = 'scores' | 'top-cut' | 'ratings-info';
+export function meta() {
+	return [
+		{ title: "SCOREBEATABLE" },
+		{ name: "description", content: "the website where you see your scores so you can beat them" },
+	];
+}
 
-export default function Home() {
+export default function Layout() {
   const [paletteIndex, setPaletteIndex] = useState(0);//useLocalStorage<number>("paletteIndex", 0);
   const [importError, setImportError] = useState<string | null>(null);
   const [scores, setScores] = useState<HighScoreResult[]>([]);
-  const [pageState, setPageState] = useState<PageState>('scores');
   const [ratingDisplay, setRatingDisplay] = useState<RatingDisplay>('Proper');
 
   const handleImport = useCallback(async (acceptedFiles: File[]) => {
@@ -107,60 +107,60 @@ export default function Home() {
     } as React.CSSProperties;
   }, [paletteIndex]);
 
+  const outletContext: LayoutContextType = useMemo(() => {
+    return {
+      scores,
+      ratingDisplay
+    }
+  }, [ratingDisplay, scores]);
+
   return (
-    <div className={styles.page} style={paletteVariables}>
-      <div aria-hidden className={`${styles.bigText} ${styles.topRight}`}>
+    <div className="layout" style={paletteVariables}>
+      <div aria-hidden className="layout__big-text layout__big-text--top-right">
         SCORE
       </div>
-      <div aria-hidden className={`${styles.bigText} ${styles.bottomLeft}`}>
+      <div aria-hidden className="layout__big-text layout__big-text--bottom-left">
         BEATABLE
       </div>
-      <div className={styles.container}>
-        <div aria-hidden className={styles.circle} >
-          <div className={styles.circleCut}></div>
+      <div className="layout__container">
+        <div aria-hidden className="layout__circle" >
+          <div className="layout__circleCut"></div>
         </div>
-        <div className={styles.content}>
+        <div className="layout__content">
           <header>
-            <h1 className={styles.heading}>SCOREBEATABLE</h1>
+            <h1 className="layout__heading">SCOREBEATABLE</h1>
           </header>
-          <main className={styles.main}>
-            <div>
-              <button onClick={() => setPageState('scores')}>Scores</button>
-              <button onClick={() => setPageState('top-cut')}>Top 25</button>
-              <button onClick={() => setPageState('ratings-info')}>Ratings Info</button>
-            </div>
+          <main className="layout__main">
+            <nav>
+              <ul>
+                <li><Link to="/scores">Scores</Link></li>
+                <li><Link to="/top-cut">Top 25</Link></li>
+                <li><Link to="/ratings-info">Ratings Info</Link></li>
+              </ul>
+            </nav>
 
-            <select className={`${styles.control} ${styles.select}`} value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
+            <select className="layout__control layout__select" value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
               {PALETTES.map((palette, index) => (
-                <option key={index} value={`${index}`}>{palette.title}</option>
+                <option key={palette.title} value={`${index}`}>{palette.title}</option>
               ))}
             </select>
 
             {importError && (
-              <div className={styles.alert}>{importError}</div>
+              <div className="layout__alert">{importError}</div>
             )}
 
             <div {...getRootProps()}>
               <input {...getInputProps()} />
-              <button className={`${styles.control} ${styles.button}`} onClick={open}>{'// select your arcade scores file.'}</button>
+              <button className="layout__control layout__button" onClick={open}>{'// select your arcade scores file.'}</button>
             </div>
-            <p>On Windows, you can find this at <span className={styles.path}>[user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json</span></p>
+            <p>On Windows, you can find this at <span className="layout__path">[user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json</span></p>
 
             <div>
               <button onClick={() => setRatingDisplay('Averaged')}>Averaged</button>
               <button onClick={() => setRatingDisplay('Total')}>Total</button>
               <button onClick={() => setRatingDisplay('Proper')}>Proper</button>
             </div>
-
-            {pageState === 'scores' && (
-              <Scores scores={scores} ratingDisplay={ratingDisplay} />
-            )}
-            {pageState === 'top-cut' && (
-              <TopCut scores={scores} ratingDisplay={ratingDisplay} />
-            )}
-            {pageState === 'ratings-info' && (
-              <RatingsInfo ratingDisplay={ratingDisplay} />
-            )}
+						<Outlet context={outletContext} />
           </main>
         </div>
       </div>

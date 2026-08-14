@@ -1,5 +1,5 @@
-import consts from '@/data/consts.json';
-import { ResultGrade } from '@/types';
+import consts from '~/data/consts.json';
+import type { ResultGrade } from '~/types';
 
 const RESULT_GRADES = consts.resultGrades as ResultGrade[];
 const A_PLUS_GRADE = consts.aPlusGrade as ResultGrade;

@@ -1,8 +1,8 @@
 // Based on Ratings as of 2.2.1 (PlayerStatsHelper.cs)
-import { AccuracyRange, HeaderRow, HighScoreEntry, HighScoreResult, SongEntry, TableRow } from "@/types";
-import songs from "@/data/songs.json";
+import type { AccuracyRange, HeaderRow, HighScoreEntry, HighScoreResult, SongEntry, TableRow } from "~/types";
+import songs from "~/data/songs.json";
 import { difficultyToNumber, sortResultsByRating } from "./sort";
-import { getGrade, getGradeCoefArcade } from "./grades";
+import { getGradeCoefArcade } from "./grades";
 import { formatAccuracy } from "./format";
 import { processScores } from "./process";
 

@@ -1,4 +1,4 @@
-import { Difficulty, RatingDisplay } from "@/types";
+import type { Difficulty, RatingDisplay } from "~/types";
 import { MAX_COMPLETION_RATING } from "./ratings";
 
 const MAX_LENGTH = 60;

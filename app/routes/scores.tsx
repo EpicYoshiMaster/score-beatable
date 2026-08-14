@@ -1,17 +1,12 @@
-import { ClearState, Difficulty, Grade, HighScoreResult, Modifier, RatingDisplay, SongType } from "@/types";
-import { getCombinedHighScore, getCompletionRating, getTotalSongRating, getUnplayedArcadeCharts } from "@/utils/ratings";
+import type { ClearState, Difficulty, Grade, Modifier, SongType } from "~/types";
+import { getCombinedHighScore, getCompletionRating, getTotalSongRating, getUnplayedArcadeCharts } from "../utils/ratings";
 import { useMemo, useState } from "react";
-import styles from "./scores.module.scss";
-import {formatDifficulty, formatRating } from "@/utils/format";
-import Result from "@/components/Result";
-import useListState from "@/hooks/useListState";
+import {formatDifficulty, formatRating } from "../utils/format";
+import Result from "../components/Result";
+import useListState from "../hooks/useListState";
 import { toHeaderCase } from "js-convert-case";
-import { SORT_METHODS } from "@/utils/sort";
-
-interface ScoresProps {
-	scores: HighScoreResult[];
-	ratingDisplay: RatingDisplay;
-}
+import { SORT_METHODS } from "../utils/sort";
+import { useLayoutContext } from "~/hooks/useLayoutContext";
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['Classic', 'HalfTime', 'DoubleTime'];
 const TOGGLEABLE_DIFFICULTIES: Difficulty[] = ['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star'];
@@ -19,7 +14,9 @@ const TOGGLEABLE_GRADES: Grade[] = ['HOW?', 'F', 'D', 'C', 'B', 'A', 'S', 'S+', 
 const TOGGLEABLE_CLEAR_STATES: ClearState[] = ['Unplayed', 'Fail', 'Clear', 'FullCombo', 'PerfectFullCombo'];
 const TOGGLEABLE_SONG_TYPES: SongType[] = ['Base', 'DLC', 'Custom'];
 
-const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
+const Scores: React.FC = () => {
+	const { scores, ratingDisplay } = useLayoutContext();
+
 	const [shownModifiers, toggleModifier] = useListState<Modifier>(['Classic']);
 	const [shownDifficulties, toggleDifficulty] = useListState<Difficulty>(['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star']);
 	const [shownGrades, toggleGrade] = useListState<Grade>(['HOW?', 'F', 'D', 'C', 'B', 'A', 'S', 'S+', 'S++']);
@@ -74,14 +71,14 @@ const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
 	}, [completionRating, songRating]);
 
 	return (
-		<>
-			<div className={styles.highScore}>
+		<div className="scores">
+			<div className="scores__highScore">
 				{`Total High Score: ${combinedHighScore}`}
 			</div>
-			<div className={styles.rating}>
+			<div className="scores__rating">
 				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
 			</div>
-			<div className={styles.filters}>
+			<div className="scores__filters">
 				<div>
 					{TOGGLEABLE_MODIFIERS.map((modifier, index) => (
 						<div key={index}>
@@ -148,7 +145,7 @@ const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
 					))}
 				</div>
 			</div>
-			<div className={styles.filters}>
+			<div className="scores__filters">
 				<label htmlFor="primary-sort">Primary Sort</label>
 				<select name="primary-sort" value={primarySort} onChange={(event) => setPrimarySort(Number(event.target.value))}>
 					{SORT_METHODS.map((method, index) => (
@@ -167,14 +164,14 @@ const Scores: React.FC<ScoresProps> = ({ scores, ratingDisplay }) => {
 				<label htmlFor="reverse-secondary">Reverse</label>
 				<input type="checkbox" checked={reverseSecondary} onChange={() => setReverseSecondary(!reverseSecondary)} />
 			</div>
-			<div className={styles.grid}>
+			<div className="scores__grid">
 				{relevantScores.map((score, index) => {
 					return (
 						<Result result={score} key={index} ratingDisplay={ratingDisplay} detailed />
 					)
 				})}
 			</div>
-		</>
+		</div>
 	);
 }
 

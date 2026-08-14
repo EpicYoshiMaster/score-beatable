@@ -1,4 +1,4 @@
-import { Difficulty, HighScoreResult, SortMethod } from "@/types";
+import type { Difficulty, HighScoreResult, SortMethod } from "~/types";
 
 export const difficultyToNumber = (difficulty: Difficulty) => {
 	switch(difficulty) {

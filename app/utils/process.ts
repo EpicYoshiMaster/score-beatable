@@ -1,5 +1,5 @@
-import { HighScoreResult, HighScoreEntry, Modifier, Difficulty, SongEntry, ClearState, SongType } from "@/types";
-import songs from "@/data/songs.json";
+import type { HighScoreResult, HighScoreEntry, Modifier, Difficulty, SongEntry, ClearState, SongType } from "~/types";
+import songs from "~/data/songs.json";
 import { getGrade } from "./grades";
 import { getSongRating, RATING_TOP_CUT } from "./ratings";
 
