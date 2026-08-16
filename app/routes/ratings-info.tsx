@@ -3,6 +3,7 @@ import { buildRatingTable } from "../utils/ratings";
 import { useMemo, useState } from "react";
 import { formatResultRating, getDisplayedRating } from "../utils/format";
 import { useLayoutContext } from "~/hooks/useLayoutContext";
+import { Select } from "~/components/common";
 
 const DISPLAY_THRESHOLDS: DisplayThreshold[] = [
 	{ ratingDisplay: 'Averaged', default: 0.3, min: 0, max: 0.5, step: 0.01 },
@@ -50,24 +51,24 @@ const RatingsInfo: React.FC = () => {
 				<span>No Miss</span>
 				<input type="checkbox" checked={noMiss} onChange={() => setNoMiss(!noMiss)} />
 			</div>
-			<select className={"ratings-info__control ratings-info__select"} value={accuracyRange} onChange={(event) => { setAccuracyRange(event.target.value as AccuracyRange); }}>
+			<Select value={accuracyRange} onChange={(event) => { setAccuracyRange(event.target.value as AccuracyRange); }}>
 				<option value="General">General</option>
 				<option value="Middle">Middle</option>
 				<option value="Upper">Upper</option>
 				<option value="Top">Top</option>
-      </select>
+      </Select>
 			<table className="ratings-info__table">
 				<thead>
 					<tr>
-						{headerRow.columns.map((value, index) => (
-							<th className="ratings-info__header" scope="col" key={index}>{value}</th>
+						{headerRow.columns.map((value) => (
+							<th className="ratings-info__header" scope="col" key={value}>{value}</th>
 						))}
 					</tr>
 				</thead>
 				<tbody>
-					{levelRows.map((row, rowIndex) => {
+					{levelRows.map((row) => {
 						return (
-							<tr key={rowIndex}>
+							<tr key={row.header}>
 								<th className="ratings-info__header" scope="row">{row.header}</th>
 								{row.columns.map((ratingSet, columnIndex) => {
 									const displayedRating = getDisplayedRating(ratingSet, ratingDisplay);

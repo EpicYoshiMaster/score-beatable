@@ -1,0 +1,55 @@
+.common {
+	&__control {
+		position: relative;
+		background-color: var(--background);
+		background: none;
+		color: var(--primary);
+
+		transition: 0.2s linear background-color;
+
+		&:hover,
+		&:active {
+			background-color: var(--highlight);
+			color: var(--background);
+		}
+	}
+
+	&__control#{&}__selected {
+		background-color: var(--highlight);
+		color: var(--background);
+	}
+
+	&__link {
+		color: var(--primary);
+		background: none;
+		border: none;
+		margin: 0.5rem 0;
+		padding: 0.5rem;
+		font-size: 1.25rem;
+		letter-spacing: 0.1rem;
+		text-transform: lowercase;
+	}
+
+	&__button {
+		color: var(--primary);
+		background: none;
+		border: none;
+		margin: 0.5rem 0;
+		padding: 0.5rem;
+		font-size: 1.25rem;
+		letter-spacing: 0.1rem;
+		text-transform: lowercase;
+	}
+
+	&__select {
+		border: none;
+		margin: 0.5rem 0;
+		padding: 0.5rem;
+		font-size: 1.25rem;
+		letter-spacing: 0.1rem;
+
+		&::before {
+			content: "// " / "";
+		}
+	}
+}

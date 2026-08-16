@@ -21,6 +21,14 @@
 		gap: 0.5rem;
 	}
 
+	&__sorts {
+		display: flex;
+		flex-direction: row;
+		gap: 0.5rem;
+		align-items: center;
+		justify-content: center;
+	}
+
 	&__high-score {
 		font-family: var(--font-rubik-mono-one), Arial, Helvetica, sans-serif;
 		color: var(--primary);

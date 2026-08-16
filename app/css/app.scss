@@ -1,8 +1,9 @@
-@import "base";
+@use "base";
+@use "common";
 
-@import "routes/layout";
-@import "routes/ratings-info";
-@import "routes/scores";
-@import "routes/top-cut";
+@use "routes/layout";
+@use "routes/ratings-info";
+@use "routes/scores";
+@use "routes/top-cut";
 
-@import "components/result";
+@use "components/result";

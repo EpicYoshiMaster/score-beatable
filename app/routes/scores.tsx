@@ -7,6 +7,7 @@ import useListState from "../hooks/useListState";
 import { toHeaderCase } from "js-convert-case";
 import { SORT_METHODS } from "../utils/sort";
 import { useLayoutContext } from "~/hooks/useLayoutContext";
+import { Select } from "~/components/common";
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['Classic', 'HalfTime', 'DoubleTime'];
 const TOGGLEABLE_DIFFICULTIES: Difficulty[] = ['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star'];
@@ -80,8 +81,8 @@ const Scores: React.FC = () => {
 			</div>
 			<div className="scores__filters">
 				<div>
-					{TOGGLEABLE_MODIFIERS.map((modifier, index) => (
-						<div key={index}>
+					{TOGGLEABLE_MODIFIERS.map((modifier) => (
+						<div key={modifier}>
 							<label htmlFor={modifier}>{toHeaderCase(modifier)}</label>
 							<input 
 								type="checkbox" 
@@ -93,8 +94,8 @@ const Scores: React.FC = () => {
 					))}
 				</div>
 				<div>
-					{TOGGLEABLE_DIFFICULTIES.map((difficulty, index) => (
-						<div key={index}>
+					{TOGGLEABLE_DIFFICULTIES.map((difficulty) => (
+						<div key={difficulty}>
 							<label htmlFor={difficulty}>{formatDifficulty(difficulty)}</label>
 							<input 
 								type="checkbox" 
@@ -106,8 +107,8 @@ const Scores: React.FC = () => {
 					))}
 				</div>
 				<div>
-					{TOGGLEABLE_GRADES.map((grade, index) => (
-						<div key={index}>
+					{TOGGLEABLE_GRADES.map((grade) => (
+						<div key={grade}>
 							<label htmlFor={grade}>{grade}</label>
 							<input 
 								type="checkbox" 
@@ -119,8 +120,8 @@ const Scores: React.FC = () => {
 					))}
 				</div>
 				<div>
-					{TOGGLEABLE_CLEAR_STATES.map((clearState, index) => (
-						<div key={index}>
+					{TOGGLEABLE_CLEAR_STATES.map((clearState) => (
+						<div key={clearState}>
 							<label htmlFor={clearState}>{toHeaderCase(clearState)}</label>
 							<input 
 								type="checkbox" 
@@ -132,8 +133,8 @@ const Scores: React.FC = () => {
 					))}
 				</div>
 				<div>
-					{TOGGLEABLE_SONG_TYPES.map((songType, index) => (
-						<div key={index}>
+					{TOGGLEABLE_SONG_TYPES.map((songType) => (
+						<div key={songType}>
 							<label htmlFor={songType}>{songType}</label>
 							<input 
 								type="checkbox" 
@@ -145,29 +146,29 @@ const Scores: React.FC = () => {
 					))}
 				</div>
 			</div>
-			<div className="scores__filters">
+			<div className="scores__sorts">
 				<label htmlFor="primary-sort">Primary Sort</label>
-				<select name="primary-sort" value={primarySort} onChange={(event) => setPrimarySort(Number(event.target.value))}>
+				<Select name="primary-sort" value={primarySort} onChange={(event) => setPrimarySort(Number(event.target.value))}>
 					{SORT_METHODS.map((method, index) => (
-						<option key={index} value={index}>{method.name}</option>
+						<option key={method.name} value={index}>{method.name}</option>
 					))}
-				</select>
+				</Select>
 				<label htmlFor="reverse-primary">Reverse</label>
 				<input type="checkbox" checked={reversePrimary} onChange={() => setReversePrimary(!reversePrimary)} />
 				|
 				<label htmlFor="secondary-sort">Secondary Sort</label>
-				<select name="secondary-sort" value={secondarySort} onChange={(event) => setSecondarySort(Number(event.target.value))}>
+				<Select name="secondary-sort" value={secondarySort} onChange={(event) => setSecondarySort(Number(event.target.value))}>
 					{SORT_METHODS.map((method, index) => (
-						<option key={index} value={index}>{method.name}</option>
+						<option key={method.name} value={index}>{method.name}</option>
 					))}
-				</select>
+				</Select>
 				<label htmlFor="reverse-secondary">Reverse</label>
 				<input type="checkbox" checked={reverseSecondary} onChange={() => setReverseSecondary(!reverseSecondary)} />
 			</div>
 			<div className="scores__grid">
-				{relevantScores.map((score, index) => {
+				{relevantScores.map((score) => {
 					return (
-						<Result result={score} key={index} ratingDisplay={ratingDisplay} detailed />
+						<Result result={score} key={score.song} ratingDisplay={ratingDisplay} detailed />
 					)
 				})}
 			</div>

@@ -2,8 +2,10 @@ import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
 import { processScores } from "../utils/process";
 import type { HighScoreResult, RatingDisplay } from "~/types";
-import { Link, Outlet } from "react-router";
+import { Outlet } from "react-router";
 import type { LayoutContextType } from "~/hooks/useLayoutContext";
+import { useLocalStorage } from '~/utils/hooks';
+import { Button, CustomNavLink, Select } from '~/components/common';
 
 // tabs: Scores, Top 25, Ratings Info
 // Scores is the main tab which lets you manipulate and view everything in different ways
@@ -42,10 +44,10 @@ export function meta() {
 }
 
 export default function Layout() {
-  const [paletteIndex, setPaletteIndex] = useState(0);//useLocalStorage<number>("paletteIndex", 0);
+  const [paletteIndex, setPaletteIndex] = useLocalStorage<number>('paletteIndex', 0);
   const [importError, setImportError] = useState<string | null>(null);
   const [scores, setScores] = useState<HighScoreResult[]>([]);
-  const [ratingDisplay, setRatingDisplay] = useState<RatingDisplay>('Proper');
+  const [ratingDisplay, setRatingDisplay] = useLocalStorage<RatingDisplay>('ratingDisplay', 'Proper');//useState<RatingDisplay>('Proper');
 
   const handleImport = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 1) {
@@ -127,23 +129,21 @@ export default function Layout() {
           <div className="layout__circleCut"></div>
         </div>
         <div className="layout__content">
-          <header>
+          <header className="layout__header">
             <h1 className="layout__heading">SCOREBEATABLE</h1>
-          </header>
-          <main className="layout__main">
-            <nav>
-              <ul>
-                <li><Link to="/scores">Scores</Link></li>
-                <li><Link to="/top-cut">Top 25</Link></li>
-                <li><Link to="/ratings-info">Ratings Info</Link></li>
+            <nav className="layout__nav">
+              <ul className="layout__nav-list">
+                <li><CustomNavLink to="/scores">Scores</CustomNavLink></li>
+                <li><CustomNavLink to="/top-cut">Top 25</CustomNavLink></li>
+                <li><CustomNavLink to="/ratings-info">Ratings Info</CustomNavLink></li>
               </ul>
             </nav>
 
-            <select className="layout__control layout__select" value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
+            <Select value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
               {PALETTES.map((palette, index) => (
                 <option key={palette.title} value={`${index}`}>{palette.title}</option>
               ))}
-            </select>
+            </Select>
 
             {importError && (
               <div className="layout__alert">{importError}</div>
@@ -151,15 +151,17 @@ export default function Layout() {
 
             <div {...getRootProps()}>
               <input {...getInputProps()} />
-              <button className="layout__control layout__button" onClick={open}>{'// select your arcade scores file.'}</button>
+              <Button onClick={open}>{'select your arcade scores file.'}</Button>
             </div>
             <p>On Windows, you can find this at <span className="layout__path">[user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json</span></p>
 
             <div>
-              <button onClick={() => setRatingDisplay('Averaged')}>Averaged</button>
-              <button onClick={() => setRatingDisplay('Total')}>Total</button>
-              <button onClick={() => setRatingDisplay('Proper')}>Proper</button>
+              <Button selected={ratingDisplay === 'Averaged'} onClick={() => setRatingDisplay('Averaged')}>Averaged</Button>
+              <Button selected={ratingDisplay === 'Total'} onClick={() => setRatingDisplay('Total')}>Total</Button>
+              <Button selected={ratingDisplay === 'Proper'} onClick={() => setRatingDisplay('Proper')}>Proper</Button>
             </div>
+          </header>
+          <main className="layout__main">
 						<Outlet context={outletContext} />
           </main>
         </div>

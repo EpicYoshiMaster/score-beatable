@@ -32,6 +32,13 @@
 		overflow: auto;
 	}
 
+	&__header {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
 	&__heading {
 		font-family: var(--font-rubik-black), Arial, Helvetica, sans-serif;
 		font-weight: 900;
@@ -39,6 +46,26 @@
 		font-style: italic;
 		color: var(--background);
 		-webkit-text-stroke: 0.1rem var(--primary);
+	}
+
+	&__nav {
+		width: 100%;
+	}
+
+	&__nav-list {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 1rem 0;
+
+		li {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 12rem;
+		}
 	}
 
 	&__main {
@@ -60,35 +87,8 @@
 		font-size: 1.25rem;
 	}
 
-	&__control {
-		position: relative;
-		background-color: var(--background);
-		background: none;
-		color: var(--primary);
-
-		transition: 0.2s linear background-color;
-
-		&:hover,
-		&:active {
-			background-color: var(--highlight);
-			color: var(--background);
-		}
-	}
-
 	&__path {
 		color: var(--highlight);
-	}
-
-	&__select {
-		border: none;
-		margin: 0.5rem 0;
-		padding: 0.5rem;
-		font-size: 1.25rem;
-		letter-spacing: 0.1rem;
-
-		&::before {
-			content: "// "
-		}
 	}
 
 	&__button {
