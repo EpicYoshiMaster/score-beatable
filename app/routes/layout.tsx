@@ -130,6 +130,9 @@ export default function Layout() {
         </div>
         <div className="layout__content">
           <header className="layout__header">
+            <div className="layout__corner">
+              <Button className="layout__corner__button" noSlash>Settings</Button>
+            </div>
             <h1 className="layout__heading">SCOREBEATABLE</h1>
             <nav className="layout__nav">
               <ul className="layout__nav-list">

@@ -10,24 +10,25 @@ export const Slash: React.FC = () => {
 
 type ButtonProps = {
 	selected?: boolean;
-	children: React.ReactNode;
+	children?: React.ReactNode;
+	noSlash?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Button: React.FC<ButtonProps> = ({ children, selected, className, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ children, selected, className, noSlash, ...props }) => {
 	const mergedClassName = classNames('common__control common__button', {
 		'common__selected': selected,
 	}, className);
 
 	return (
 		<button {...props} className={mergedClassName}>
-			<Slash />
+			{!noSlash && (<Slash />)}
 			{children}
 		</button>
 	);
 }
 
 type CustomNavLinkProps = {
-	children: React.ReactNode;
+	children?: React.ReactNode;
 } & NavLinkProps;
 
 export const CustomNavLink: React.FC<CustomNavLinkProps> = ({ children, className, ...props }) => {

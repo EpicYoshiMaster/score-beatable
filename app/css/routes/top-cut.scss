@@ -7,12 +7,10 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 		padding: 0 1rem;
-	}
 
-	&__rating {
-		font-family: var(--font-rubik-mono-one), Arial, Helvetica, sans-serif;
-		color: var(--primary);
-		font-size: 3rem;
+		@media (min-width: 1400px) {
+			grid-template-columns: 1fr 1fr;
+		}
 	}
 
 	&__score {

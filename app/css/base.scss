@@ -1,7 +1,7 @@
 :root {
-	--font-noto-sans: 'Noto Sans Variable';
-	--font-rubik-mono-one: 'Rubik Mono One';
-	--font-rubik-black: 'Rubik Variable';
+	--font-noto-sans: 'Noto Sans Variable', Arial, Helvetica, sans-serif;
+	--font-rubik-mono-one: 'Rubik Mono One', Arial, Helvetica, sans-serif;
+	--font-rubik-black: 'Rubik Variable', Arial, Helvetica, sans-serif;
 }
 
 html {
@@ -18,7 +18,7 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-noto-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-noto-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

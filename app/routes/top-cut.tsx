@@ -31,7 +31,7 @@ const TopCut: React.FC = () => {
 				<label htmlFor="includeDlc">Include DLC in Ratings</label>
 				<input type="checkbox" checked={includeDlc} onChange={() => setIncludeDlc(!includeDlc)} />
 			</div>
-			<div className="top-cut__rating">
+			<div className="common__rating">
 				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
 			</div>
 			<div className="top-cut__grid">

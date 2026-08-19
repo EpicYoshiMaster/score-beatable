@@ -2,6 +2,7 @@ import type { HighScoreResult, RatingDisplay } from "~/types";
 import { formatAccuracy, formatResultRating, formatScore, formatTitle } from "~/utils/format";
 import { shouldCountResult } from "~/utils/ratings";
 import { toHeaderCase } from "js-convert-case";
+import classNames from "classnames";
 
 interface ResultProps {
 	result: HighScoreResult;
@@ -14,6 +15,10 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 	const modifierText = result.modifier === "Classic" ? '' : `[${toHeaderCase(result.modifier)}]${shouldCount ? '' : '*'}`;
 	const title = result.songEntry.title === '' ? result.title : result.songEntry.title;
 	const difficultyName = result.songEntry.difficulty === '' ? result.difficulty : result.songEntry.difficulty;
+
+	const ratingClassName = classNames('common__rating common__rating--large', {
+		'result__unranked': !shouldCount
+	});
 
 	return (
 		<div className="result">
@@ -45,7 +50,7 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 				<div className="result__right">
 					{detailed && (<div className="result__score">{formatScore(result.score)}</div>)}
 					<div className="result__accuracy">{`(${detailed ? `${result.resultGrade.grade} ` : ''}${formatAccuracy(result.accuracy)})`}</div>
-					<div className={`result__rating ${shouldCount ? '' : 'result__unranked'}`}>{formatResultRating(result, ratingDisplay)}</div>
+					<div className={ratingClassName}>{formatResultRating(result, ratingDisplay)}</div>
 				</div>
 			</div>
 		</div>

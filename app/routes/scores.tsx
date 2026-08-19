@@ -76,7 +76,7 @@ const Scores: React.FC = () => {
 			<div className="scores__highScore">
 				{`Total High Score: ${combinedHighScore}`}
 			</div>
-			<div className="scores__rating">
+			<div className="common__rating">
 				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
 			</div>
 			<div className="scores__filters">
