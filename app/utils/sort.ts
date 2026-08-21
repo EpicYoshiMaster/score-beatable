@@ -34,7 +34,7 @@ export const sortResultsByAccuracy = (a: HighScoreResult, b: HighScoreResult) =>
 	return b.accuracy - a.accuracy;
 }
 
-export const sortResultsByLevel = (a: HighScoreResult, b: HighScoreResult) => {
+export const sortResultsByLevel = (a: { level: number }, b: { level: number }) => {
 	return b.level - a.level;
 }
 

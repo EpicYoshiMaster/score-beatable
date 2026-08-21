@@ -1,6 +1,10 @@
 .ratings-info {
 	display: contents;
 
+	&__table {
+		background-color: var(--background);
+	}
+
 	&__header {
 		color: var(--secondary);
 

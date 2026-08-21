@@ -16,7 +16,7 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 	const title = result.songEntry.title === '' ? result.title : result.songEntry.title;
 	const difficultyName = result.songEntry.difficulty === '' ? result.difficulty : result.songEntry.difficulty;
 
-	const ratingClassName = classNames('common__rating common__rating--large', {
+	const ratingClassName = classNames('common__rating', {
 		'result__unranked': !shouldCount
 	});
 
@@ -48,7 +48,7 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 					<div className="result__level">{result.level}</div>
 				</div>
 				<div className="result__right">
-					{detailed && (<div className="result__score">{formatScore(result.score)}</div>)}
+					{detailed ? (<div className="result__score">{formatScore(result.score)}</div>) : <span></span>}
 					<div className="result__accuracy">{`(${detailed ? `${result.resultGrade.grade} ` : ''}${formatAccuracy(result.accuracy)})`}</div>
 					<div className={ratingClassName}>{formatResultRating(result, ratingDisplay)}</div>
 				</div>

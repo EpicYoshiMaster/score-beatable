@@ -10,7 +10,7 @@
 
 		background: var(--background);
 
-		padding: 1rem;
+		
 		max-width: 1400px;
 		height: 100%;
 
@@ -21,6 +21,7 @@
 
 	&__content {
 		position: relative;
+		padding: 0.5rem;
 
 		height: 100%;
 

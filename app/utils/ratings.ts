@@ -1,7 +1,7 @@
 // Based on Ratings as of 2.2.1 (PlayerStatsHelper.cs)
 import type { AccuracyRange, HeaderRow, HighScoreEntry, HighScoreResult, SongEntry, TableRow } from "~/types";
 import songs from "~/data/songs.json";
-import { difficultyToNumber, sortResultsByRating } from "./sort";
+import { difficultyToNumber, sortResultsByLevel, sortResultsByRating } from "./sort";
 import { getGradeCoefArcade } from "./grades";
 import { formatAccuracy } from "./format";
 import { processScores } from "./process";
@@ -13,6 +13,7 @@ const DIFFICULTY_COUNT = 6;
 const ADD_FAMILIAR_TUTORIAL_BECAUSE_FOR_SOME_REASON_ITS_DIFFERENT_SO_IT_DOESNT_SHOW_UP_IN_THE_DATABASE_BUT_IT_DOES_SHOW_IN_VISIBLE_SONGS_EVEN_THOUGH_YOU_LITERALLY_CANNOT_PLAY_IT_WOW_DCELL = 1;
 export const MAX_COMPLETION_RATING = 2.0;
 export const RATING_TOP_CUT = 25;
+export const MAX_ACCURACY = 1.0;
 
 export const UNPLAYED_ENTRY: HighScoreEntry = {
 	song: '',
@@ -126,6 +127,19 @@ const buildResultsDictionary = (results: HighScoreResult[]) => {
 
 		return dictionary;
 	}, {} as { [k: string]: HighScoreResult });
+}
+
+export const getMaxPossibleRating = (includeDoubleTime: boolean = true, includeDlc: boolean = true) => {
+	const filteredSongs = Object.values(songs).filter((song) => includeDlc || !song.isDlc);
+	const sortedSongs = filteredSongs.concat(includeDoubleTime ? filteredSongs : []).sort(sortResultsByLevel);
+	const topCut = sortedSongs.slice(0, RATING_TOP_CUT);
+
+	const totalRating = topCut.reduce((rating: number, song: SongEntry) => {
+		return rating + getSongRating(1, song.level, true, true);
+	}, 0);
+	const averagedRating = totalRating / RATING_TOP_CUT;
+
+	return averagedRating + MAX_COMPLETION_RATING;
 }
 
 export const getTopCut = (results: HighScoreResult[], includeDlc: boolean = true) => {

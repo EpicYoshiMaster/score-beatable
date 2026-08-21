@@ -2,6 +2,11 @@
 	position: relative;
 	display: flex;
 	flex-direction: column;
+	background-color: var(--background);
+	border: 3px solid var(--detail);
+	border-radius: 2rem;
+	border-bottom-right-radius: 0;
+	padding: 0.5rem 0.5rem;
 
 	&__bottom {
 		display: flex;

@@ -1,7 +1,7 @@
 import type { AccuracyRange, DisplayThreshold } from "~/types";
-import { buildRatingTable } from "../utils/ratings";
+import { buildRatingTable, getMaxPossibleRating } from "../utils/ratings";
 import { useMemo, useState } from "react";
-import { formatResultRating, getDisplayedRating } from "../utils/format";
+import { formatRating, formatResultRating, getDisplayedRating } from "../utils/format";
 import { useLayoutContext } from "~/hooks/useLayoutContext";
 import { Select } from "~/components/common";
 
@@ -21,7 +21,7 @@ const RatingsInfo: React.FC = () => {
 
 	const displayThreshold = useMemo(() => {
 		return DISPLAY_THRESHOLDS.find((threshold) => threshold.ratingDisplay === ratingDisplay);
-	}, [ratingDisplay])
+	}, [ratingDisplay]);
 
 	if(ratingDisplay !== prevRatingDisplay) {
 		if(displayThreshold) {
@@ -38,6 +38,13 @@ const RatingsInfo: React.FC = () => {
 	return (
 		<div className="ratings-info">
 			<p>Explain how Max Completion works</p>
+			<div>
+				<div>Max Ratings</div>
+				<div>{`No Double Time, No DLC: ${formatRating(getMaxPossibleRating(false, false))}`}</div>
+				<div>{`Double Time, No DLC: ${formatRating(getMaxPossibleRating(true, false))}`}</div>
+				<div>{`No Double Time, DLC: ${formatRating(getMaxPossibleRating(false, true))}`}</div>
+				<div>{`Double Time, DLC: ${formatRating(getMaxPossibleRating(true, true))}`}</div>
+			</div>
 			<input
 				id="threshold"
 				type="number"

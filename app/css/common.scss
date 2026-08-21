@@ -69,11 +69,11 @@
 	@media (min-width: 1400px) {
 		&__rating {
 			font-size: 3rem;
-			height: 3rem;
+			min-height: 3rem;
 
 			&--large {
 				font-size: 3.5rem;
-				height: 3.5rem;
+				min-height: 3.5rem;
 			}
 		}
 	}
