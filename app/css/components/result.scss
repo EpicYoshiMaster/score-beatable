@@ -38,9 +38,9 @@
 	&__left {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: flex-start;
-		//min-width: 12rem;
+		width: 6rem;
 	}
 
 	&__right {
@@ -52,18 +52,13 @@
 	}
 
 	&__title {
-		display: inline-block;
+		position: relative;
 		font-size: 1rem;
 		letter-spacing: 0.3rem;
 		text-transform: lowercase;
 		display: flex;
 		flex-direction: row;
 		gap: 0.5rem;
-		//width: 500px;
-		//
-		//text-overflow: ellipsis;
-		//white-space: nowrap;
-		//overflow: hidden;
 	}
 
 	&__metadata {
@@ -83,10 +78,10 @@
 	&__difficulty {
 		font-family: var(--font-rubik-black);
 		font-weight: 900;
-		font-size: 0.9rem;
+		width: 5.5rem;
+		text-align: start;
 		text-transform: uppercase;
 		text-wrap: nowrap;
-		height: 1rem;
 	}
 
 	&__modifier {
@@ -99,8 +94,7 @@
 		align-items: flex-start;
 		justify-content: flex-start;
 		font-family: var(--font-rubik-mono-one);
-		font-size: 3rem;
-		height: 3rem;
+		font-size: 3.5rem;
 	}
 
 	&__unranked {
@@ -111,13 +105,11 @@
 		font-family: var(--font-rubik-mono-one);
 		color: var(--primary);
 		font-size: 1.5rem;
-		height: 1.5rem;
 	}
 
 	&__score {
 		font-family: var(--font-rubik-mono-one);
 		color: var(--primary);
 		font-size: 2rem;
-		height: 2rem;
 	}
 }

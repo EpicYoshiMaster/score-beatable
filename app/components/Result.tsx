@@ -1,10 +1,11 @@
 import type { HighScoreResult, RatingDisplay } from "~/types";
-import { formatAccuracy, formatResultRating, formatScore, formatTitle, getDisplayedRating } from "~/utils/format";
+import { formatAccuracy, formatLevel, formatScore, formatTitle, getDisplayedRating } from "~/utils/format";
 import { shouldCountResult } from "~/utils/ratings";
 import { toHeaderCase } from "js-convert-case";
 import classNames from "classnames";
 import { useState } from "react";
 import { Rating } from "./common";
+import { ReactFitty } from "react-fitty";
 
 interface ResultProps {
 	result: HighScoreResult;
@@ -53,8 +54,8 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 				)}
 				<div className="result__bottom">
 					<div className="result__left">
-						<div className="result__difficulty">{difficultyName}</div>
-						<div className="result__level">{result.level}</div>
+						<div className="result__difficulty"><ReactFitty minSize={5} maxSize={16}>{difficultyName}</ReactFitty></div>
+						<div className="result__level">{formatLevel(result.level)}</div>
 					</div>
 					<div className="result__right">
 						{detailed ? (<div className="result__score">{formatScore(result.score)}</div>) : <span></span>}

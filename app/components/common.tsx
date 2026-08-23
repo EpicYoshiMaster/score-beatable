@@ -34,19 +34,17 @@ export const Button: React.FC<ButtonProps> = ({ children, selected, className, n
 
 type RatingProps = {
 	value: number;
-	defaultValue?: number;
 	className?: string;
 	duration?: number;
 };
 
-export const Rating: React.FC<RatingProps> = ({ value, className, duration = 3, defaultValue = 0 }) => {
+export const Rating: React.FC<RatingProps> = ({ value, className, duration = 3 }) => {
 	const containerRef = useRef<HTMLSpanElement | null>(null);
-	const [prevValue, setPrevValue] = useState(defaultValue);
 	const [displayValue, setDisplayValue] = useState(value);
 
 	useGSAP(() => {
 		const progress = {
-			rating: prevValue
+			rating: displayValue
 		}
 
 		gsap.to(progress, { 
@@ -54,7 +52,6 @@ export const Rating: React.FC<RatingProps> = ({ value, className, duration = 3, 
 			rating: value,
 			ease: "circ.out",
 			onUpdate: () => { setDisplayValue(progress.rating); },
-			onComplete: () => { setPrevValue(value); } 
 		})
 	}, { dependencies: [value, duration], scope: containerRef });
 

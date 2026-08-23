@@ -57,22 +57,18 @@
 		font-family: var(--font-rubik-mono-one);
 		color: var(--primary);
 		font-size: 2rem;
-		height: 2rem;
 
 		&--large {
 			font-size: 2.5rem;
-			height: 2.5rem;
 		}
 	}
 
 	@media (min-width: 1400px) {
 		&__rating {
 			font-size: 3rem;
-			min-height: 3rem;
 
 			&--large {
 				font-size: 3.5rem;
-				min-height: 3.5rem;
 			}
 		}
 	}

@@ -36,6 +36,10 @@ export const formatDifficulty = (difficulty: Difficulty): string => {
 	}
 }
 
+export const formatLevel = (level: number): string => {
+	return `${level < 10 ? '0' : ''}${level}`;
+}
+
 export const formatScore = (score: number): string => {
 	const leadingThresholds = [...Array(SCORE_LEADING_PLACES).keys()].map((index) => Math.pow(10, index + 1)) // 10, 100, 1000, ...
 
