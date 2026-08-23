@@ -159,7 +159,7 @@ export const getTopCut = (results: HighScoreResult[], includeDlc: boolean = true
 	const topCut = Object.entries(dictionary)
 		.map(([, result]) => result)
 		.sort(sortResultsByRating)
-		.filter((_value, index) => index < RATING_TOP_CUT - 5)
+		.filter((_value, index) => index < RATING_TOP_CUT)
 
 	const emptyResult = processScores([UNPLAYED_ENTRY], true)[0];
 
