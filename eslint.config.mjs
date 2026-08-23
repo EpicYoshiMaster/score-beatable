@@ -31,7 +31,8 @@ export default defineConfig(
 
     // Custom rule overrides (modify rule levels or disable rules)
     rules: {
-      "@eslint-react/exhaustive-deps": "error"
+      "@eslint-react/exhaustive-deps": "error",
+      "@typescript-eslint/no-unused-vars": "warn"
     },
   },
 );

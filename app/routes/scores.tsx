@@ -7,7 +7,7 @@ import useListState from "../hooks/useListState";
 import { toHeaderCase } from "js-convert-case";
 import { SORT_METHODS } from "../utils/sort";
 import { useLayoutContext } from "~/hooks/useLayoutContext";
-import { Select } from "~/components/common";
+import { Rating, Select } from "~/components/common";
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['Classic', 'HalfTime', 'DoubleTime'];
 const TOGGLEABLE_DIFFICULTIES: Difficulty[] = ['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star'];
@@ -77,7 +77,7 @@ const Scores: React.FC = () => {
 				{`Total High Score: ${combinedHighScore}`}
 			</div>
 			<div className="common__rating">
-				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
+				<Rating value={completionRating} /> + <Rating value={songRating} /> = <Rating value={playerRating} />
 			</div>
 			<div className="scores__filters">
 				<div>

@@ -39,6 +39,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
+		justify-content: flex-start;
 		//min-width: 12rem;
 	}
 
@@ -51,12 +52,18 @@
 	}
 
 	&__title {
+		display: inline-block;
 		font-size: 1rem;
 		letter-spacing: 0.3rem;
 		text-transform: lowercase;
 		display: flex;
 		flex-direction: row;
 		gap: 0.5rem;
+		//width: 500px;
+		//
+		//text-overflow: ellipsis;
+		//white-space: nowrap;
+		//overflow: hidden;
 	}
 
 	&__metadata {
@@ -78,6 +85,8 @@
 		font-weight: 900;
 		font-size: 0.9rem;
 		text-transform: uppercase;
+		text-wrap: nowrap;
+		height: 1rem;
 	}
 
 	&__modifier {
@@ -86,6 +95,9 @@
 	}
 
 	&__level {
+		display: flex;
+		align-items: flex-start;
+		justify-content: flex-start;
 		font-family: var(--font-rubik-mono-one);
 		font-size: 3rem;
 		height: 3rem;

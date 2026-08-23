@@ -1,9 +1,10 @@
 import type { HighScoreResult, RatingDisplay } from "~/types";
-import { formatAccuracy, formatResultRating, formatScore, formatTitle } from "~/utils/format";
+import { formatAccuracy, formatResultRating, formatScore, formatTitle, getDisplayedRating } from "~/utils/format";
 import { shouldCountResult } from "~/utils/ratings";
 import { toHeaderCase } from "js-convert-case";
 import classNames from "classnames";
 import { useState } from "react";
+import { Rating } from "./common";
 
 interface ResultProps {
 	result: HighScoreResult;
@@ -19,7 +20,7 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 	const title = result.songEntry.title === '' ? result.title : result.songEntry.title;
 	const difficultyName = result.songEntry.difficulty === '' ? result.difficulty : result.songEntry.difficulty;
 
-	const ratingClassName = classNames('common__rating', {
+	const ratingClassName = classNames({
 		'result__unranked': !shouldCount
 	});
 
@@ -58,7 +59,7 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 					<div className="result__right">
 						{detailed ? (<div className="result__score">{formatScore(result.score)}</div>) : <span></span>}
 						<div className="result__accuracy">{`(${detailed ? `${result.resultGrade.grade} ` : ''}${formatAccuracy(result.accuracy)})`}</div>
-						<div className={ratingClassName}>{formatResultRating(result, ratingDisplay)}</div>
+						<Rating duration={1.5} className={ratingClassName} value={getDisplayedRating(result, ratingDisplay)} />
 					</div>
 				</div>
 			</button>

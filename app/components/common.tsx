@@ -1,6 +1,11 @@
 import classNames from "classnames";
-import type { ButtonHTMLAttributes, SelectHTMLAttributes } from "react";
+import { useRef, useState, type ButtonHTMLAttributes, type SelectHTMLAttributes } from "react";
 import { NavLink, type NavLinkProps } from "react-router";
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { formatRating } from "~/utils/format";
+
+gsap.registerPlugin(useGSAP); // register the hook to avoid React version discrepancies 
 
 export const Slash: React.FC = () => {
 	return (
@@ -24,6 +29,39 @@ export const Button: React.FC<ButtonProps> = ({ children, selected, className, n
 			{!noSlash && (<Slash />)}
 			{children}
 		</button>
+	);
+}
+
+type RatingProps = {
+	value: number;
+	defaultValue?: number;
+	className?: string;
+	duration?: number;
+};
+
+export const Rating: React.FC<RatingProps> = ({ value, className, duration = 3, defaultValue = 0 }) => {
+	const containerRef = useRef<HTMLSpanElement | null>(null);
+	const [prevValue, setPrevValue] = useState(defaultValue);
+	const [displayValue, setDisplayValue] = useState(value);
+
+	useGSAP(() => {
+		const progress = {
+			rating: prevValue
+		}
+
+		gsap.to(progress, { 
+			duration, 
+			rating: value,
+			ease: "circ.out",
+			onUpdate: () => { setDisplayValue(progress.rating); },
+			onComplete: () => { setPrevValue(value); } 
+		})
+	}, { dependencies: [value, duration], scope: containerRef });
+
+	const mergedClassName = classNames('common__rating', className);
+
+	return (
+		<span ref={containerRef} className={mergedClassName}>{formatRating(displayValue)}</span>
 	);
 }
 

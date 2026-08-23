@@ -22,7 +22,7 @@ const TopCut: React.FC = () => {
 	}, [completionRating, songRating]);
 
 	const topCut = useMemo(() => {
-		return getTopCut(scores, includeDlc);
+		return getTopCut(scores, includeDlc, true);
 	}, [includeDlc, scores]);
 
 	return (

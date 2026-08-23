@@ -16,7 +16,7 @@ export const RATING_TOP_CUT = 25;
 export const MAX_ACCURACY = 1.0;
 
 export const UNPLAYED_ENTRY: HighScoreEntry = {
-	song: '',
+	song: 'no song found/Unknown\\Classic',
 	score: 0,
 	accuracy: 0,
 	maxCombo: 0,
@@ -28,7 +28,15 @@ export const UNPLAYED_ENTRY: HighScoreEntry = {
 	isPerfectFullCombo: false,
 	modifierMask: 0,
 	grade: null,
-	notes: [],
+	notes: [
+		{ timing: 'Critical', count: 0},
+		{ timing: 'Perfect', count: 0 },
+		{ timing: 'Great', count: 0 },
+		{ timing: 'Good', count: 0 },
+		{ timing: 'Ok', count: 0 },
+		{ timing: 'Barely', count: 0 },
+		{ timing: 'Miss', count: 0 },
+	],
 }
 
 export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.isCustom && (result.modifier === 'Classic' || result.modifier === 'DoubleTime');
@@ -142,16 +150,22 @@ export const getMaxPossibleRating = (includeDoubleTime: boolean = true, includeD
 	return averagedRating + MAX_COMPLETION_RATING;
 }
 
-export const getTopCut = (results: HighScoreResult[], includeDlc: boolean = true) => {
-	if(results.length === 0) return [];
+export const getTopCut = (results: HighScoreResult[], includeDlc: boolean = true, padEmpty: boolean = false) => {
+	if(results.length === 0 && !padEmpty) return [];
 
 	const relevantResults = results.filter(shouldCountResult).filter((result) => includeDlc || !result.isDlc);
 	const dictionary = buildResultsDictionary(relevantResults);
 
-	return Object.entries(dictionary)
+	const topCut = Object.entries(dictionary)
 		.map(([, result]) => result)
 		.sort(sortResultsByRating)
-		.filter((_value, index) => index < RATING_TOP_CUT)
+		.filter((_value, index) => index < RATING_TOP_CUT - 5)
+
+	const emptyResult = processScores([UNPLAYED_ENTRY], true)[0];
+
+	const emptyResults: HighScoreResult[] = padEmpty ? (new Array(Math.max(RATING_TOP_CUT - topCut.length, 0)).fill(emptyResult)) : [];
+
+	return topCut.length < RATING_TOP_CUT ? topCut.concat(emptyResults) : topCut;
 }
 
 export const getTotalSongRating = (results: HighScoreResult[], includeDlc: boolean = true) => {
