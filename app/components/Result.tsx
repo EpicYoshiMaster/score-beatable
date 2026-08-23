@@ -3,6 +3,7 @@ import { formatAccuracy, formatResultRating, formatScore, formatTitle } from "~/
 import { shouldCountResult } from "~/utils/ratings";
 import { toHeaderCase } from "js-convert-case";
 import classNames from "classnames";
+import { useState } from "react";
 
 interface ResultProps {
 	result: HighScoreResult;
@@ -11,6 +12,8 @@ interface ResultProps {
 }
 
 const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
+	const [showMore, setShowMore] = useState(false);
+
 	const shouldCount = shouldCountResult(result);
 	const modifierText = result.modifier === "Classic" ? '' : `[${toHeaderCase(result.modifier)}]${shouldCount ? '' : '*'}`;
 	const title = result.songEntry.title === '' ? result.title : result.songEntry.title;
@@ -20,38 +23,51 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 		'result__unranked': !shouldCount
 	});
 
+	const showMoreClassName = classNames('result__show-more', {
+		'result__show-more--collapsed': !showMore
+	});
+
 	return (
 		<div className="result">
-			<div className="result__title">
-				<span>
-					{`${formatTitle(title)}`}
-				</span>
-				{detailed && (<span className="result__modifier">
-					{modifierText}
-				</span>)}
-			</div>
-			{detailed && result.songEntry.artist !== '' && (
-				<div className="result__metadata">
-					<span className="result__bold">Artist:</span>
-					<span>{result.songEntry.artist}</span>
+			<button className="result__container" onClick={() => setShowMore(!showMore)}>
+				<div className="result__title">
+					<span>
+						{`${formatTitle(title)}`}
+					</span>
+					{detailed && (<span className="result__modifier">
+						{modifierText}
+					</span>)}
 				</div>
-			)}
-			{detailed && result.songEntry.creator !== '' && (
-				<div className="result__metadata">
-					<span className="result__bold">Charted By:</span>
-					<span>{result.songEntry.creator}</span>
+				{detailed && result.songEntry.artist !== '' && (
+					<div className="result__metadata">
+						<span className="result__bold">Artist:</span>
+						<span>{result.songEntry.artist}</span>
+					</div>
+				)}
+				{detailed && result.songEntry.creator !== '' && (
+					<div className="result__metadata">
+						<span className="result__bold">Charted By:</span>
+						<span>{result.songEntry.creator}</span>
+					</div>
+				)}
+				<div className="result__bottom">
+					<div className="result__left">
+						<div className="result__difficulty">{difficultyName}</div>
+						<div className="result__level">{result.level}</div>
+					</div>
+					<div className="result__right">
+						{detailed ? (<div className="result__score">{formatScore(result.score)}</div>) : <span></span>}
+						<div className="result__accuracy">{`(${detailed ? `${result.resultGrade.grade} ` : ''}${formatAccuracy(result.accuracy)})`}</div>
+						<div className={ratingClassName}>{formatResultRating(result, ratingDisplay)}</div>
+					</div>
 				</div>
-			)}
-			<div className="result__bottom">
-				<div className="result__left">
-					<div className="result__difficulty">{difficultyName}</div>
-					<div className="result__level">{result.level}</div>
-				</div>
-				<div className="result__right">
-					{detailed ? (<div className="result__score">{formatScore(result.score)}</div>) : <span></span>}
-					<div className="result__accuracy">{`(${detailed ? `${result.resultGrade.grade} ` : ''}${formatAccuracy(result.accuracy)})`}</div>
-					<div className={ratingClassName}>{formatResultRating(result, ratingDisplay)}</div>
-				</div>
+			</button>
+			<div className={showMoreClassName}>
+				{result.notes.map((note) => (
+					<div key={note.timing}>{`${note.timing}: ${note.count}`}</div>
+				))}
+				<div>{result.isFullCombo ? 'Full Combo' : ''}</div>
+				<div>{result.isPerfectFullCombo ? 'Perfect Full Combo' : ''}</div>
 			</div>
 		</div>
 	);

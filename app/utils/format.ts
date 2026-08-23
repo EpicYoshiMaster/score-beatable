@@ -4,10 +4,10 @@ import { MAX_COMPLETION_RATING } from "./ratings";
 const MAX_LENGTH = 60;
 const SCORE_LEADING_PLACES = 6;
 
-export const formatTitle = (title: string) => {
-	if(title.length <= MAX_LENGTH) return title;
+export const formatTitle = (title: string, maxLength = MAX_LENGTH) => {
+	if(title.length <= maxLength) return title;
 
-	return `${title.substring(0, MAX_LENGTH)}...`;
+	return `${title.substring(0, maxLength)}...`;
 }
 
 export const formatAccuracy = (accuracy: number): string => {

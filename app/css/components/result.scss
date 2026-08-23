@@ -7,6 +7,27 @@
 	border-radius: 2rem;
 	border-bottom-right-radius: 0;
 	padding: 0.5rem 0.5rem;
+	height: min-content;
+
+	&__container {
+		color: var(--primary);
+		position: relative;
+		background: none;
+		border: none;
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__show-more {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+
+		&--collapsed {
+			border: none;
+			height: 0;
+			overflow: hidden;
+		}
+	}
 
 	&__bottom {
 		display: flex;
@@ -17,7 +38,8 @@
 	&__left {
 		display: flex;
 		flex-direction: column;
-		min-width: 12rem;
+		align-items: flex-start;
+		//min-width: 12rem;
 	}
 
 	&__right {
@@ -54,8 +76,7 @@
 	&__difficulty {
 		font-family: var(--font-rubik-black);
 		font-weight: 900;
-		font-size: 1rem;
-		height: 1rem;
+		font-size: 0.9rem;
 		text-transform: uppercase;
 	}
 
@@ -66,15 +87,8 @@
 
 	&__level {
 		font-family: var(--font-rubik-mono-one);
-		font-size: 2.5rem;
-		height: 2.5rem;
-	}
-
-	&__rating {
-		font-family: var(--font-rubik-mono-one);
-		color: var(--primary);
-		font-size: 3.5rem;
-		height: 3.5rem;
+		font-size: 3rem;
+		height: 3rem;
 	}
 
 	&__unranked {
