@@ -1,4 +1,5 @@
 .result {
+	$r: &;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -8,6 +9,24 @@
 	border-bottom-right-radius: 0;
 	padding: 0.5rem 0.5rem;
 	height: min-content;
+
+	&--top-cut {
+		#{$r}__title {
+			font-size: 0.9rem;
+		}
+
+		#{$r}__accuracy {
+			font-size: 1.25rem;
+			
+		}
+
+		#{$r}__right {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+			width: 100%;
+		}
+	}
 
 	&__container {
 		color: var(--primary);
@@ -54,11 +73,12 @@
 	&__title {
 		position: relative;
 		font-size: 1rem;
-		letter-spacing: 0.3rem;
+		letter-spacing: 0.2rem;
 		text-transform: lowercase;
 		display: flex;
 		flex-direction: row;
 		gap: 0.5rem;
+		margin: 0 0.25rem 0.5rem;
 	}
 
 	&__metadata {
@@ -95,15 +115,12 @@
 		justify-content: flex-start;
 		font-family: var(--font-rubik-mono-one);
 		font-size: 3.5rem;
-	}
-
-	&__unranked {
-		color: var(--secondary);
+		height: 3rem;
 	}
 
 	&__accuracy {
 		font-family: var(--font-rubik-mono-one);
-		color: var(--primary);
+		color: var(--secondary);
 		font-size: 1.5rem;
 	}
 

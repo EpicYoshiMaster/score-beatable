@@ -55,21 +55,17 @@
 
 	&__rating {
 		font-family: var(--font-rubik-mono-one);
-		color: var(--primary);
-		font-size: 2rem;
+		color: var(--rating);
+		font-size: 3rem;
+		height: 2.5rem;
 
-		&--large {
-			font-size: 2.5rem;
+		&--unranked {
+			color: var(--secondary);
 		}
 	}
 
-	@media (min-width: 1400px) {
-		&__rating {
-			font-size: 3rem;
-
-			&--large {
-				font-size: 3.5rem;
-			}
-		}
+	&__rating-total {
+		margin: 1rem 0;
+		height: unset;
 	}
 }

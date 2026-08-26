@@ -1,18 +1,19 @@
 import type { HighScoreResult, RatingDisplay } from "~/types";
-import { formatAccuracy, formatLevel, formatScore, formatTitle, getDisplayedRating } from "~/utils/format";
+import { formatAccuracy, formatLevel, formatTitle, getDisplayedRating } from "~/utils/format";
 import { shouldCountResult } from "~/utils/ratings";
 import classNames from "classnames";
 import { useState } from "react";
 import { Rating } from "./common";
 import { ReactFitty } from "react-fitty";
 
-interface ResultProps {
+interface TopCutResultProps {
 	result: HighScoreResult;
 	ratingDisplay: RatingDisplay;
-	detailed?: boolean; // Detailed includes more information to really dive in
 }
 
-const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
+const TOP_CUT_MAX_LENGTH = 35;
+
+const TopCutResult: React.FC<TopCutResultProps> = ({ result, ratingDisplay }) => {
 	const [showMore, setShowMore] = useState(false);
 
 	const shouldCount = shouldCountResult(result);
@@ -25,36 +26,23 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 	});
 
 	return (
-		<div className="result">
+		<div className="result result--top-cut">
 			<button className="result__container" onClick={() => setShowMore(!showMore)}>
 				<div className="result__title">
 					<span>
-						{`${formatTitle(title)}`}
+						{`${formatTitle(title, TOP_CUT_MAX_LENGTH)}`}
 					</span>
-					{detailed && (<span className="result__modifier">
+					<span className="result__modifier">
 						{modifierText}
-					</span>)}
+					</span>
 				</div>
-				{detailed && result.songEntry.artist !== '' && (
-					<div className="result__metadata">
-						<span className="result__bold">Artist:</span>
-						<span>{result.songEntry.artist}</span>
-					</div>
-				)}
-				{detailed && result.songEntry.creator !== '' && (
-					<div className="result__metadata">
-						<span className="result__bold">Charted By:</span>
-						<span>{result.songEntry.creator}</span>
-					</div>
-				)}
 				<div className="result__bottom">
 					<div className="result__left">
 						<div className="result__difficulty"><ReactFitty minSize={5} maxSize={16}>{difficultyName}</ReactFitty></div>
 						<div className="result__level">{formatLevel(result.level)}</div>
 					</div>
 					<div className="result__right">
-						{detailed ? (<div className="result__score">{formatScore(result.score)}</div>) : <span></span>}
-						<div className="result__accuracy">{`(${detailed ? `${result.resultGrade.grade} ` : ''}${formatAccuracy(result.accuracy)})`}</div>
+						<div className="result__accuracy">{`(${formatAccuracy(result.accuracy)})`}</div>
 						<Rating unranked={!shouldCount} className="result__rating" value={getDisplayedRating(result, ratingDisplay)} />
 					</div>
 				</div>
@@ -70,4 +58,4 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 	);
 }
 
-export default Result;
+export default TopCutResult;

@@ -1,8 +1,8 @@
 import { getCompletionRating, getTopCut, getTotalSongRating } from "~/utils/ratings";
 import { useMemo, useState } from "react";
-import { formatRating } from "~/utils/format";
-import Result from "~/components/Result";
 import { useLayoutContext } from "~/hooks/useLayoutContext";
+import TopCutResult from "~/components/TopCutResult";
+import { Rating } from "~/components/common";
 
 const TopCut: React.FC = () => {
 	const { scores, ratingDisplay } = useLayoutContext();
@@ -31,13 +31,13 @@ const TopCut: React.FC = () => {
 				<label htmlFor="includeDlc">Include DLC in Ratings</label>
 				<input type="checkbox" checked={includeDlc} onChange={() => setIncludeDlc(!includeDlc)} />
 			</div>
-			<div className="common__rating">
-				{formatRating(completionRating)} + {formatRating(songRating)} = {formatRating(playerRating)}
+			<div className="common__rating common__rating-total">
+				<Rating value={completionRating} /> + <Rating value={songRating} /> = <Rating value={playerRating} />
 			</div>
 			<div className="top-cut__grid">
 				{topCut.map((score, index) => {
 					return (
-						<Result key={index} result={score} ratingDisplay={ratingDisplay} />
+						<TopCutResult key={index} result={score} ratingDisplay={ratingDisplay} />
 					)
 				})}
 			</div>

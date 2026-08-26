@@ -35,10 +35,11 @@ export const Button: React.FC<ButtonProps> = ({ children, selected, className, n
 type RatingProps = {
 	value: number;
 	className?: string;
-	duration?: number;
+	unranked?: boolean;
+	tweenDuration?: number;
 };
 
-export const Rating: React.FC<RatingProps> = ({ value, className, duration = 3 }) => {
+export const Rating: React.FC<RatingProps> = ({ value, className, unranked, tweenDuration = 3 }) => {
 	const containerRef = useRef<HTMLSpanElement | null>(null);
 	const [displayValue, setDisplayValue] = useState(value);
 
@@ -48,14 +49,16 @@ export const Rating: React.FC<RatingProps> = ({ value, className, duration = 3 }
 		}
 
 		gsap.to(progress, { 
-			duration, 
+			duration: tweenDuration, 
 			rating: value,
-			ease: "circ.out",
+			ease: "expo.out",
 			onUpdate: () => { setDisplayValue(progress.rating); },
 		})
-	}, { dependencies: [value, duration], scope: containerRef });
+	}, { dependencies: [value, tweenDuration], scope: containerRef });
 
-	const mergedClassName = classNames('common__rating', className);
+	const mergedClassName = classNames('common__rating', {
+		'common__rating--unranked': unranked,
+	}, className);
 
 	return (
 		<span ref={containerRef} className={mergedClassName}>{formatRating(displayValue)}</span>
