@@ -70,6 +70,12 @@
 		grid-template-columns: 1fr 1fr 1fr;
 	}
 
+	&__above {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
 	&__title {
 		position: relative;
 		font-size: 1rem;
@@ -106,7 +112,11 @@
 
 	&__modifier {
 		font-weight: bold;
+		font-weight: 900;
+		font-family: var(--font-rubik-black);
 		text-transform: uppercase;
+		color: var(--secondary);
+		font-size: 1rem;
 	}
 
 	&__level {

@@ -1,5 +1,5 @@
 import type { HighScoreResult, RatingDisplay } from "~/types";
-import { formatAccuracy, formatLevel, formatScore, formatTitle, getDisplayedRating } from "~/utils/format";
+import { formatAccuracy, formatLevel, formatScore, formatSongSpeed, formatTitle, getDisplayedRating } from "~/utils/format";
 import { shouldCountResult } from "~/utils/ratings";
 import classNames from "classnames";
 import { useState } from "react";
@@ -9,14 +9,12 @@ import { ReactFitty } from "react-fitty";
 interface ResultProps {
 	result: HighScoreResult;
 	ratingDisplay: RatingDisplay;
-	detailed?: boolean; // Detailed includes more information to really dive in
 }
 
-const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
+const Result: React.FC<ResultProps> = ({ result, ratingDisplay }) => {
 	const [showMore, setShowMore] = useState(false);
 
 	const shouldCount = shouldCountResult(result);
-	const modifierText = result.modifier === "DoubleTime" ? '1.5x' : result.modifier === 'HalfTime' ? '0.75x' : '';
 	const title = result.songEntry.title === '' ? result.title : result.songEntry.title;
 	const difficultyName = result.songEntry.difficulty === '' ? result.difficulty : result.songEntry.difficulty;
 
@@ -31,17 +29,17 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 					<span>
 						{`${formatTitle(title)}`}
 					</span>
-					{detailed && (<span className="result__modifier">
-						{modifierText}
-					</span>)}
+					<span className="result__modifier">
+						{formatSongSpeed(result.songSpeed)}
+					</span>
 				</div>
-				{detailed && result.songEntry.artist !== '' && (
+				{result.songEntry.artist !== '' && (
 					<div className="result__metadata">
 						<span className="result__bold">Artist:</span>
 						<span>{result.songEntry.artist}</span>
 					</div>
 				)}
-				{detailed && result.songEntry.creator !== '' && (
+				{result.songEntry.creator !== '' && (
 					<div className="result__metadata">
 						<span className="result__bold">Charted By:</span>
 						<span>{result.songEntry.creator}</span>
@@ -53,8 +51,8 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 						<div className="result__level">{formatLevel(result.level)}</div>
 					</div>
 					<div className="result__right">
-						{detailed ? (<div className="result__score">{formatScore(result.score)}</div>) : <span></span>}
-						<div className="result__accuracy">{`(${detailed ? `${result.resultGrade.grade} ` : ''}${formatAccuracy(result.accuracy)})`}</div>
+						<div className="result__score">{formatScore(result.score)}</div>
+						<div className="result__accuracy">{`(${`${result.resultGrade.grade} `}${formatAccuracy(result.accuracy)})`}</div>
 						<Rating unranked={!shouldCount} className="result__rating" value={getDisplayedRating(result, ratingDisplay)} />
 					</div>
 				</div>
@@ -65,6 +63,7 @@ const Result: React.FC<ResultProps> = ({ result, ratingDisplay, detailed }) => {
 				))}
 				<div>{result.isFullCombo ? 'Full Combo' : ''}</div>
 				<div>{result.isPerfectFullCombo ? 'Perfect Full Combo' : ''}</div>
+				<div>{'Modifiers: ' + result.modifierList}</div>
 			</div>
 		</div>
 	);

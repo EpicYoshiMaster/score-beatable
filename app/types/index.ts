@@ -23,9 +23,11 @@ export type HighScoreResult = HighScoreEntry & {
   entry: string; // Internal name
   title: string; // Proper name
   difficulty: Difficulty; // Beginner, Hard, Expert, UNBEATABLE, Star
-  modifier: Modifier; // Classic DoubleTime HalfTime
+  songSpeed: SongSpeed; // Classic DoubleTime HalfTime
+  modifierList: Modifier[];
   isCustom: boolean;
   isDlc: boolean;
+  isCritical: boolean;
   songEntry: SongEntry;
   rating: number;
   averagedRating: number;
@@ -55,7 +57,8 @@ export type ResultGrade = {
 export type Grade = 'F' | 'C++' | 'S++' | 'S+' | 'S' | 'A' | 'B' | 'C' | 'D' | 'HOW?';
 export type GradeOption = 'Greater' | 'Equal' | 'NoMiss' | 'Bonus';
 export type Difficulty = 'Tutorial' | 'Beginner' | 'Easy' | 'Normal' | 'Hard' | 'UNBEATABLE' | 'Star' | 'OFFSETWIZARD' | 'Trailer' | 'Unknown';
-export type Modifier = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
+export type SongSpeed = 'Classic' | 'HalfTime' | 'DoubleTime' | 'Unknown';
+export type Modifier = 'None' | 'NoFail' | 'AssistMode' | 'DoubleTime' | 'HalfTime' | 'Critical' | 'Stealth' | 'Not-Critical';
 export type Judgement = 'Miss' | 'Barely' | 'Ok' | 'Good' | 'Great' | 'Perfect' | 'Critical';
 export type ClearState = 'Unplayed' | 'Fail' | 'Clear' | 'FullCombo' | 'PerfectFullCombo';
 export type SongType = 'Base' | 'DLC' | 'Custom';

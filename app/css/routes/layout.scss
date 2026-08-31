@@ -150,7 +150,8 @@
 
 		clip-path: polygon(50% 50%, var(--cut-length) 0, 100% 0, 100% 100%, 0 100%, 0 var(--cut-length), 50% 50%);
 
-		animation: rotate_circle 6s steps(18, end) infinite forwards;
+		animation: rotate_circle 6s steps(17, end) infinite forwards;
+		transform-origin: 50% 50%;
 
 		@media (prefers-reduced-motion: reduce) {
 			animation: none;

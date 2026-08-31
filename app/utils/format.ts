@@ -1,4 +1,4 @@
-import type { Difficulty, RatingDisplay } from "~/types";
+import type { Difficulty, RatingDisplay, SongSpeed } from "~/types";
 import { MAX_COMPLETION_RATING } from "./ratings";
 
 const MAX_LENGTH = 60;
@@ -22,6 +22,15 @@ export const getDisplayedRating = ({ averagedRating, rating }: { averagedRating:
 
 export const formatResultRating = ({ averagedRating, rating }: { averagedRating: number, rating: number }, ratingDisplay: RatingDisplay) => {
 	return `${formatRating(getDisplayedRating({ averagedRating, rating }, ratingDisplay))}`
+}
+
+export const formatSongSpeed = (songSpeed: SongSpeed): string => {
+	switch(songSpeed) {
+		case 'Classic': return '';
+		case 'HalfTime': return '[Half Time]';
+		case 'DoubleTime': return '[Double Time]';
+		default: return `[${songSpeed}]`;
+	}
 }
 
 export const formatDifficulty = (difficulty: Difficulty): string => {

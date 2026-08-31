@@ -1,5 +1,5 @@
 import type { HighScoreResult, RatingDisplay } from "~/types";
-import { formatAccuracy, formatLevel, formatTitle, getDisplayedRating } from "~/utils/format";
+import { formatAccuracy, formatLevel, formatSongSpeed, formatTitle, getDisplayedRating } from "~/utils/format";
 import { shouldCountResult } from "~/utils/ratings";
 import classNames from "classnames";
 import { useState } from "react";
@@ -17,7 +17,6 @@ const TopCutResult: React.FC<TopCutResultProps> = ({ result, ratingDisplay }) =>
 	const [showMore, setShowMore] = useState(false);
 
 	const shouldCount = shouldCountResult(result);
-	const modifierText = result.modifier === "DoubleTime" ? '1.5x' : result.modifier === 'HalfTime' ? '0.75x' : '';
 	const title = result.songEntry.title === '' ? result.title : result.songEntry.title;
 	const difficultyName = result.songEntry.difficulty === '' ? result.difficulty : result.songEntry.difficulty;
 
@@ -29,12 +28,7 @@ const TopCutResult: React.FC<TopCutResultProps> = ({ result, ratingDisplay }) =>
 		<div className="result result--top-cut">
 			<button className="result__container" onClick={() => setShowMore(!showMore)}>
 				<div className="result__title">
-					<span>
-						{`${formatTitle(title, TOP_CUT_MAX_LENGTH)}`}
-					</span>
-					<span className="result__modifier">
-						{modifierText}
-					</span>
+					{`${formatTitle(title, TOP_CUT_MAX_LENGTH)}`}
 				</div>
 				<div className="result__bottom">
 					<div className="result__left">
@@ -42,7 +36,10 @@ const TopCutResult: React.FC<TopCutResultProps> = ({ result, ratingDisplay }) =>
 						<div className="result__level">{formatLevel(result.level)}</div>
 					</div>
 					<div className="result__right">
-						<div className="result__accuracy">{`(${formatAccuracy(result.accuracy)})`}</div>
+						<div className="result__above">
+							<div className="result__modifier">{formatSongSpeed(result.songSpeed)}</div>
+							<div className="result__accuracy">{`(${formatAccuracy(result.accuracy)})`}</div>
+						</div>
 						<Rating unranked={!shouldCount} className="result__rating" value={getDisplayedRating(result, ratingDisplay)} />
 					</div>
 				</div>
@@ -53,6 +50,7 @@ const TopCutResult: React.FC<TopCutResultProps> = ({ result, ratingDisplay }) =>
 				))}
 				<div>{result.isFullCombo ? 'Full Combo' : ''}</div>
 				<div>{result.isPerfectFullCombo ? 'Perfect Full Combo' : ''}</div>
+				<div>{'Modifiers: ' + result.modifierList}</div>
 			</div>
 		</div>
 	);

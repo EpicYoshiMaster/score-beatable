@@ -39,7 +39,7 @@ export const UNPLAYED_ENTRY: HighScoreEntry = {
 	],
 }
 
-export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.isCustom && (result.modifier === 'Classic' || result.modifier === 'DoubleTime');
+export const shouldCountResult = (result: HighScoreResult) => result.cleared && !result.isCustom && (result.songSpeed === 'Classic' || result.songSpeed === 'DoubleTime');
 
 export const getTotalNumArcadeCharts = (includeDlc: boolean = true) => {
 	return Object.values(songs).filter((song: SongEntry) => includeDlc || !song.isDlc).length 

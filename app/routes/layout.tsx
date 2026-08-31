@@ -126,9 +126,7 @@ export default function Layout() {
         BEATABLE
       </div>
       <div className="layout__container">
-        <div aria-hidden className="layout__circle" >
-          <div className="layout__circleCut"></div>
-        </div>
+        <div aria-hidden className="layout__circle"></div>
         <div className="layout__content">
           <header className="layout__header">
             <div className="layout__corner">
@@ -140,6 +138,7 @@ export default function Layout() {
                 <li><CustomNavLink to="/scores">Scores</CustomNavLink></li>
                 <li><CustomNavLink to="/top-cut">Top 25</CustomNavLink></li>
                 <li><CustomNavLink to="/ratings-info">Ratings Info</CustomNavLink></li>
+                <li><CustomNavLink to="/credits">Credits</CustomNavLink></li>
               </ul>
             </nav>
 
