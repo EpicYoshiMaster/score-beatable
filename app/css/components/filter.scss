@@ -1,0 +1,22 @@
+.filter {
+	border: 3px solid var(--detail);
+	border-radius: 0.5rem;
+	border-bottom-right-radius: 0;
+	padding: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	background-color: var(--background);
+	height: max-content;
+
+	&__item {
+		display: flex;
+		flex-direction: row;
+	}
+
+	&__button {
+		margin: 0;
+		width: 100%;
+		text-align: start;
+	}
+}

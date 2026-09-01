@@ -53,6 +53,11 @@
 		}
 	}
 
+	&__label {
+		letter-spacing: 0.2rem;
+		font-size: 1.25rem;
+	}
+
 	&__rating {
 		font-family: var(--font-rubik-mono-one);
 		color: var(--rating);

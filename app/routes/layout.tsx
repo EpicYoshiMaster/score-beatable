@@ -152,12 +152,19 @@ export default function Layout() {
               <div className="layout__alert">{importError}</div>
             )}
 
+            <div className="common__label">
+              [arcade_mode_file]
+            </div>
+
             <div {...getRootProps()}>
               <input {...getInputProps()} />
               <Button onClick={open}>{'select your arcade scores file.'}</Button>
             </div>
             <p>On Windows, you can find this at <span className="layout__path">[user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json</span></p>
 
+            <div className="common__label">
+              [rating_display_style]
+            </div>
             <div>
               <Button selected={ratingDisplay === 'Averaged'} onClick={() => setRatingDisplay('Averaged')}>Averaged</Button>
               <Button selected={ratingDisplay === 'Total'} onClick={() => setRatingDisplay('Total')}>Total</Button>

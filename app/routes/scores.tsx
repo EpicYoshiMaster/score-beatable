@@ -8,6 +8,7 @@ import { toHeaderCase } from "js-convert-case";
 import { SORT_METHODS } from "../utils/sort";
 import { useLayoutContext } from "~/hooks/useLayoutContext";
 import { Rating, Select } from "~/components/common";
+import { Filter } from "~/components/Filter";
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['None', 'HalfTime', 'DoubleTime', 'Not-Critical', 'Critical'];
 const TOGGLEABLE_DIFFICULTIES: Difficulty[] = ['Beginner', 'Easy', 'Normal', 'Hard', 'UNBEATABLE', 'Star'];
@@ -80,74 +81,14 @@ const Scores: React.FC = () => {
 				<Rating value={completionRating} /> + <Rating value={songRating} /> = <Rating value={playerRating} />
 			</div>
 			<div className="scores__filters">
-				<div>
-					{TOGGLEABLE_MODIFIERS.map((modifier) => (
-						<div key={modifier}>
-							<label htmlFor={modifier}>{toHeaderCase(modifier)}</label>
-							<input 
-								type="checkbox" 
-								name={modifier} 
-								checked={shownModifiers.includes(modifier)} 
-								onChange={() => toggleModifier(modifier)}
-							/>
-						</div>
-					))}
-				</div>
-				<div>
-					{TOGGLEABLE_DIFFICULTIES.map((difficulty) => (
-						<div key={difficulty}>
-							<label htmlFor={difficulty}>{formatDifficulty(difficulty)}</label>
-							<input 
-								type="checkbox" 
-								name={difficulty} 
-								checked={shownDifficulties.includes(difficulty)} 
-								onChange={() => toggleDifficulty(difficulty)}
-							/>
-						</div>
-					))}
-				</div>
-				<div>
-					{TOGGLEABLE_GRADES.map((grade) => (
-						<div key={grade}>
-							<label htmlFor={grade}>{grade}</label>
-							<input 
-								type="checkbox" 
-								name={grade} 
-								checked={shownGrades.includes(grade)} 
-								onChange={() => toggleGrade(grade)}
-							/>
-						</div>
-					))}
-				</div>
-				<div>
-					{TOGGLEABLE_CLEAR_STATES.map((clearState) => (
-						<div key={clearState}>
-							<label htmlFor={clearState}>{toHeaderCase(clearState)}</label>
-							<input 
-								type="checkbox" 
-								name={clearState} 
-								checked={shownClearStates.includes(clearState)} 
-								onChange={() => toggleClearState(clearState)}
-							/>
-						</div>
-					))}
-				</div>
-				<div>
-					{TOGGLEABLE_SONG_TYPES.map((songType) => (
-						<div key={songType}>
-							<label htmlFor={songType}>{songType}</label>
-							<input 
-								type="checkbox" 
-								name={songType} 
-								checked={shownSongTypes.includes(songType)} 
-								onChange={() => toggleSongType(songType)}
-							/>
-						</div>
-					))}
-				</div>
+				<Filter options={TOGGLEABLE_SONG_TYPES} title="Song Type Filter" selected={shownSongTypes} toggleItem={toggleSongType}  />
+				<Filter options={TOGGLEABLE_MODIFIERS} title="Modifier Filter" selected={shownModifiers} toggleItem={toggleModifier}  />
+				<Filter options={TOGGLEABLE_DIFFICULTIES} title="Difficulty Filter" selected={shownDifficulties} toggleItem={toggleDifficulty}  />
+				<Filter options={TOGGLEABLE_GRADES} title="Grade Filter" selected={shownGrades} toggleItem={toggleGrade}  />
+				<Filter options={TOGGLEABLE_CLEAR_STATES} title="Clear State Filter" selected={shownClearStates} toggleItem={toggleClearState} formatOption={toHeaderCase}  />
 			</div>
 			<div className="scores__sorts">
-				<label htmlFor="primary-sort">Primary Sort</label>
+				<label htmlFor="primary-sort" className="common__label">[primary_sort]</label>
 				<Select name="primary-sort" value={primarySort} onChange={(event) => setPrimarySort(Number(event.target.value))}>
 					{SORT_METHODS.map((method, index) => (
 						<option key={method.name} value={index}>{method.name}</option>
@@ -156,7 +97,7 @@ const Scores: React.FC = () => {
 				<label htmlFor="reverse-primary">Reverse</label>
 				<input type="checkbox" checked={reversePrimary} onChange={() => setReversePrimary(!reversePrimary)} />
 				|
-				<label htmlFor="secondary-sort">Secondary Sort</label>
+				<label htmlFor="secondary-sort" className="common__label">[secondary_sort]</label>
 				<Select name="secondary-sort" value={secondarySort} onChange={(event) => setSecondarySort(Number(event.target.value))}>
 					{SORT_METHODS.map((method, index) => (
 						<option key={method.name} value={index}>{method.name}</option>
