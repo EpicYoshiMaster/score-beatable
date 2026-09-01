@@ -75,8 +75,6 @@ const CHECK_MODIFIERS: Modifier[] = (['DoubleTime', 'HalfTime', 'Critical'] as M
 const convertModifierMaskToList = (modifierMask: number) => {
 	const maskAndList: { mask: number, list: Modifier[] } = { mask: modifierMask, list: [] };
 
-	console.log('Mask', modifierMask);
-
 	const modifierList = CHECK_MODIFIERS.reduce((maskList, modifier) => {
 		const modifierValue = getModifierValue(modifier);
 		
