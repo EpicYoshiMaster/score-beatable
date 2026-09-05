@@ -1,0 +1,138 @@
+.settings-menu {
+	position: absolute;
+	width: 10%;
+	height: 10%;
+	background-color: var(--primary);
+	bottom: 0;
+	right: 0;
+	overflow: hidden;
+
+	--cut-size: 100%;
+	--edge-size: 0%;
+
+	&--open {
+		width: 180%;
+		height: 180%;
+	}
+
+	clip-path: polygon(var(--cut-size) var(--edge-size), 100% var(--edge-size), 100% 100%, var(--edge-size) 100%, var(--edge-size) var(--cut-size));
+
+	transition: 1s width ease-in-out, 1s height ease-in-out;
+
+	&__container {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 100vw;
+		height: 100vh;
+		padding: 0;
+		
+		display: flex;
+		flex-direction: row;
+
+		justify-content: center;
+		align-items: center;
+		overflow: scroll;
+ 	}
+
+	&__grid {
+		display: grid;
+		height: 100%;
+		grid-template-columns: 1fr 1fr;
+		padding-top: 8rem;
+		margin: 0 0.5rem;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__label {
+		width: 100%;
+		text-align: left;
+		height: 1.5rem;
+	}
+
+	&__control {
+		margin: 0;
+		padding: 0;
+		width: max-content;
+		font-weight: 700;
+	}
+
+	&__label, &__control, &__description {
+		text-transform: lowercase;
+		padding: 0.5rem;
+		height: max-content;
+		font-family: var(--font-noto-sans);
+		color: var(--background);
+	}
+
+	&__description {
+		text-transform: none;
+		grid-column-start: span 2;
+		text-align: left;
+		margin-bottom: 1rem;
+		line-height: 1.5;
+	}
+
+	&__select {
+		width: 14rem;
+	}
+
+	&__button-row {
+		display: flex;
+		flex-direction: row;
+		gap: 0.5rem;
+	}
+
+	&__alert {
+		grid-column-start: span 2;
+		height: 5rem;
+		padding: 0.5rem;
+		background-color: var(--highlight);
+		color: var(--background);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		font-size: 1.25rem;
+		margin-bottom: 1rem;
+		border-radius: 1rem;
+		border-bottom-right-radius: 0;
+	}
+
+	&__bold {
+		font-weight: bold;
+	}
+
+	@media (max-width: 700px) {
+		&__grid {
+			grid-template-columns: 1fr;
+			grid-template-rows: unset;
+			gap: 1rem;
+		}
+
+		&__label {
+			padding-top: 1.5rem;
+			border-top: 3px solid var(--background);
+			text-align: center;
+		}
+
+		&__label:nth-of-type(1) {
+			padding-top: 0.5rem;
+			border-top: none;
+		}
+		
+		&__label, &__control {
+			width: 100%;
+		}
+
+		&__button-row {
+			display: flex;
+			flex-direction: column;
+		}
+
+		&__description, &__alert {
+			grid-column-start: span 1;
+		}
+	}
+}

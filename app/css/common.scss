@@ -58,6 +58,11 @@
 		font-size: 1.25rem;
 	}
 
+	&__sort {
+		display: flex;
+		flex-direction: column;
+	}
+
 	&__rating {
 		font-family: var(--font-rubik-mono-one);
 		color: var(--rating);

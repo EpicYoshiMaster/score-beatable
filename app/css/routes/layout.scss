@@ -1,7 +1,7 @@
 .layout {
 	position: relative;
 
-	background: var(--primary);
+	background: var(--background);
 	color: var(--primary);
 	height: 100vh;
 
@@ -10,8 +10,6 @@
 
 		background: var(--background);
 
-		
-		max-width: 1400px;
 		height: 100%;
 
 		margin: 0 auto;
@@ -121,21 +119,21 @@
 
 	&__big-text {
 		position: absolute;
-		color: var(--primary);
+		color: var(--background);
 		font-size: 15rem;
 
 		font-family: var(--font-rubik-black);
 		font-weight: 900;
-		-webkit-text-stroke: 0.5rem var(--background);
+		-webkit-text-stroke: 0.5rem var(--detail);
 
 		&--top-right {
-			top: -8rem;
+			top: -7rem;
 			right: -2rem;
 		}
 
 		&--bottom-left {
-			bottom: -10rem;
-			left: -3rem;
+			bottom: -7rem;
+			left: -2rem;
 		}
 	}
 
@@ -145,7 +143,7 @@
 		border-radius: 50%;
 		height: min(35vw, 900px);
 		width: min(35vw, 900px);
-		right: -10%;
+		right: 5%;
 		bottom: -15%;
 
 		--cut-length: 12.5%;

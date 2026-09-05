@@ -90,3 +90,9 @@ export type DisplayThreshold = {
   max: number;
   step: number;
 }
+
+export type GlobalSettings = {
+  paletteIndex: number;
+  ratingDisplay: RatingDisplay;
+  results: HighScoreResult[];
+}

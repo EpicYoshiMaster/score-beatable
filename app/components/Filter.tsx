@@ -16,7 +16,7 @@ export function Filter<T extends string>({ options, selected, toggleItem, title,
 			{options.map((option) => (
 				<div className="filter__item" key={option}>
 					<Button 
-						className="filter__button" 
+						className="filter__control" 
 						selected={selected.includes(option)} 
 						onClick={() => toggleItem(option)}
 					>

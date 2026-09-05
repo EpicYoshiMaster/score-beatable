@@ -1,13 +1,12 @@
-import type { ClearState, Difficulty, Grade, Modifier, SongSpeed, SongType } from "~/types";
+import type { ClearState, Difficulty, Grade, Modifier, SongType } from "~/types";
 import { getCombinedHighScore, getCompletionRating, getTotalSongRating, getUnplayedArcadeCharts } from "../utils/ratings";
 import { useMemo, useState } from "react";
-import { formatDifficulty } from "../utils/format";
 import Result from "../components/Result";
 import useListState from "../hooks/useListState";
 import { toHeaderCase } from "js-convert-case";
 import { SORT_METHODS } from "../utils/sort";
 import { useLayoutContext } from "~/hooks/useLayoutContext";
-import { Rating, Select } from "~/components/common";
+import { Button, Rating, Select } from "~/components/common";
 import { Filter } from "~/components/Filter";
 
 const TOGGLEABLE_MODIFIERS: Modifier[] = ['None', 'HalfTime', 'DoubleTime', 'Not-Critical', 'Critical'];
@@ -88,23 +87,24 @@ const Scores: React.FC = () => {
 				<Filter options={TOGGLEABLE_CLEAR_STATES} title="Clear State Filter" selected={shownClearStates} toggleItem={toggleClearState} formatOption={toHeaderCase}  />
 			</div>
 			<div className="scores__sorts">
-				<label htmlFor="primary-sort" className="common__label">[primary_sort]</label>
-				<Select name="primary-sort" value={primarySort} onChange={(event) => setPrimarySort(Number(event.target.value))}>
-					{SORT_METHODS.map((method, index) => (
-						<option key={method.name} value={index}>{method.name}</option>
-					))}
-				</Select>
-				<label htmlFor="reverse-primary">Reverse</label>
-				<input type="checkbox" checked={reversePrimary} onChange={() => setReversePrimary(!reversePrimary)} />
-				|
-				<label htmlFor="secondary-sort" className="common__label">[secondary_sort]</label>
-				<Select name="secondary-sort" value={secondarySort} onChange={(event) => setSecondarySort(Number(event.target.value))}>
-					{SORT_METHODS.map((method, index) => (
-						<option key={method.name} value={index}>{method.name}</option>
-					))}
-				</Select>
-				<label htmlFor="reverse-secondary">Reverse</label>
-				<input type="checkbox" checked={reverseSecondary} onChange={() => setReverseSecondary(!reverseSecondary)} />
+				<fieldset className="filter">
+					<legend className="common__label" aria-label="Primary Sort">[primary_sort]</legend>
+					<Select className="filter__item filter__control" name="primary-sort" value={primarySort} onChange={(event) => setPrimarySort(Number(event.target.value))}>
+						{SORT_METHODS.map((method, index) => (
+							<option key={method.name} value={index}>{method.name}</option>
+						))}
+					</Select>
+					<Button className="filter__item filter__control" selected={reversePrimary} onClick={() => setReversePrimary(!reversePrimary)}>Reverse?</Button>
+				</fieldset>
+				<fieldset className="filter">
+					<legend className="common__label" aria-label="Secondary Sort">[secondary_sort]</legend>
+					<Select className="filter__item filter__control" name="secondary-sort" value={secondarySort} onChange={(event) => setSecondarySort(Number(event.target.value))}>
+						{SORT_METHODS.map((method, index) => (
+							<option key={method.name} value={index}>{method.name}</option>
+						))}
+					</Select>
+					<Button className="filter__item filter__control" selected={reverseSecondary} onClick={() => setReverseSecondary(!reverseSecondary)}>Reverse?</Button>
+				</fieldset>
 			</div>
 			<div className="scores__grid">
 				{relevantScores.map((score) => {

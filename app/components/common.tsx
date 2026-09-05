@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useRef, useState, type ButtonHTMLAttributes, type SelectHTMLAttributes } from "react";
+import { useRef, useState, type ButtonHTMLAttributes, type LabelHTMLAttributes, type SelectHTMLAttributes } from "react";
 import { NavLink, type NavLinkProps } from "react-router";
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -90,4 +90,20 @@ export const Select: React.FC<SelectProps> = ({ children, className, ...props })
 			{children}
 		</select>
 	);
+}
+
+type LabelProps = {
+	children: React.ReactNode;
+	noSlash?: boolean;
+} & LabelHTMLAttributes<HTMLLabelElement>;
+
+export const Label: React.FC<LabelProps> = ({ children, className, noSlash, ...props }) => {
+	const mergedClassName = classNames('common__label', className);
+
+	return (
+		<label {...props} className={mergedClassName}>
+			{!noSlash && (<Slash />)}
+			{children}
+		</label>
+	)
 }

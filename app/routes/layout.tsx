@@ -1,11 +1,13 @@
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useMemo, useState } from "react";
 import { processScores } from "../utils/process";
-import type { HighScoreResult, RatingDisplay } from "~/types";
+import type { GlobalSettings, HighScoreResult, RatingDisplay } from "~/types";
 import { Outlet } from "react-router";
 import type { LayoutContextType } from "~/hooks/useLayoutContext";
 import { useLocalStorage } from '~/utils/hooks';
 import { Button, CustomNavLink, Select } from '~/components/common';
+import SettingsMenu from '~/components/SettingsMenu';
+import { PALETTES } from '~/utils/misc';
 
 // tabs: Scores, Top 25, Ratings Info
 // Scores is the main tab which lets you manipulate and view everything in different ways
@@ -26,16 +28,6 @@ import { Button, CustomNavLink, Select } from '~/components/common';
 // linux high scores path: /home/[user]/.local/share/Steam/steamapps/compatdata/2240620/pfx/drive_c/users/steamuser/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
 // windows high scores path: [user]/AppData/LocalLow/D-CELL GAMES/UNBEATABLE/PROFILES/[uuid]/arcade-highscores.json
 
-const PALETTES = [
-  { title: "default", primary: "#FF257D", background: "#F9F7D5", detail: "#E0DEBF", secondary: "#B4B399", highlight: "#000000", rating: "#FF257D" },
-  { title: "Beat", primary: "#FF97B0", background: "#FFFFFF", detail: "#FFCBD5", secondary: "#FF6483", highlight: "#FFAF00", rating: "#FFAF00" },
-  { title: "Quaver", primary: "#70DAFF", background: "#318CD0", detail: "#EFEFEF", secondary: "#FF97B0", highlight: "#4FDAB5", rating: "#4FDAB5" },
-  { title: "Clef", primary: "#7552BF", background: "#F9D33B", detail: "#EDEDED", secondary: "#646D7C", highlight: "#FF4B75", rating: "#FF4B75" },
-  { title: "Penny", primary: "#B29595", background: "#2F2F2F", detail: "#FEDD00", secondary: "#D87342", highlight: "#E2E6E8", rating: "#E2E6E8" },
-  { title: "Trans Rights", primary: "#F7889D", background: "#F7F7F7", detail: "#35B4E4", secondary: "#EA7D92", highlight: "#3C3C3C", rating: "#3C3C3C" },
-  { title: "EpicYoshiMaster", primary: "#6A47B6", background: "#f2daf4", detail: "#D996E3", secondary: "#1960ac", highlight: "#c92e7e", rating: "#c92e7e" },
-];
-
 export function meta() {
 	return [
 		{ title: "SCOREBEATABLE" },
@@ -46,8 +38,32 @@ export function meta() {
 export default function Layout() {
   const [paletteIndex, setPaletteIndex] = useLocalStorage<number>('paletteIndex', 0);
   const [importError, setImportError] = useState<string | null>(null);
-  const [scores, setScores] = useState<HighScoreResult[]>([]);
-  const [ratingDisplay, setRatingDisplay] = useLocalStorage<RatingDisplay>('ratingDisplay', 'Proper');//useState<RatingDisplay>('Proper');
+  const [results, setResults] = useState<HighScoreResult[]>([]);
+  const [ratingDisplay, setRatingDisplay] = useLocalStorage<RatingDisplay>('ratingDisplay', 'Proper');
+
+  const [showSettings, setShowSettings] = useState(false);
+
+  const globalSettings: GlobalSettings = useMemo(() => {
+    return {
+      paletteIndex,
+      results,
+      ratingDisplay,
+    };
+  }, [paletteIndex, ratingDisplay, results]);
+
+  const updateGlobalSettings = useCallback((changedSettings: Partial<GlobalSettings>) => {
+    if(changedSettings.paletteIndex !== undefined) {
+      setPaletteIndex(changedSettings.paletteIndex);
+    }
+
+    if(changedSettings.results !== undefined) {
+      setResults(changedSettings.results);
+    }
+
+    if(changedSettings.ratingDisplay !== undefined) {
+      setRatingDisplay(changedSettings.ratingDisplay);
+    }
+  }, [setPaletteIndex, setRatingDisplay]);
 
   const handleImport = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 1) {
@@ -74,7 +90,7 @@ export default function Layout() {
       if (importedJSON.highScores) {
         const processedScores = processScores(importedJSON.highScores);
 
-        setScores(processedScores);
+        setResults(processedScores);
         setImportError(null);
       }
       else {
@@ -112,25 +128,25 @@ export default function Layout() {
 
   const outletContext: LayoutContextType = useMemo(() => {
     return {
-      scores,
+      scores: results,
       ratingDisplay
     }
-  }, [ratingDisplay, scores]);
+  }, [ratingDisplay, results]);
 
   return (
     <div className="layout" style={paletteVariables}>
-      <div aria-hidden className="layout__big-text layout__big-text--top-right">
-        SCORE
-      </div>
-      <div aria-hidden className="layout__big-text layout__big-text--bottom-left">
-        BEATABLE
-      </div>
       <div className="layout__container">
+        <div aria-hidden className="layout__big-text layout__big-text--top-right">
+          SCORE
+        </div>
+        <div aria-hidden className="layout__big-text layout__big-text--bottom-left">
+          BEATABLE
+        </div>
         <div aria-hidden className="layout__circle"></div>
         <div className="layout__content">
           <header className="layout__header">
             <div className="layout__corner">
-              <Button className="layout__corner__button" noSlash>Settings</Button>
+              <Button className="layout__corner__button" onClick={() => setShowSettings(!showSettings)}>Settings</Button>
             </div>
             <h1 className="layout__heading">SCOREBEATABLE</h1>
             <nav className="layout__nav">
@@ -142,6 +158,9 @@ export default function Layout() {
               </ul>
             </nav>
 
+            {/*<div className="common__label">
+              [palette]
+            </div>
             <Select value={paletteIndex} onChange={(event) => { setPaletteIndex(Number(event.target.value)); }}>
               {PALETTES.map((palette, index) => (
                 <option key={palette.title} value={`${index}`}>{palette.title}</option>
@@ -169,13 +188,14 @@ export default function Layout() {
               <Button selected={ratingDisplay === 'Averaged'} onClick={() => setRatingDisplay('Averaged')}>Averaged</Button>
               <Button selected={ratingDisplay === 'Total'} onClick={() => setRatingDisplay('Total')}>Total</Button>
               <Button selected={ratingDisplay === 'Proper'} onClick={() => setRatingDisplay('Proper')}>Proper</Button>
-            </div>
+            </div>*/}
           </header>
           <main className="layout__main">
 						<Outlet context={outletContext} />
           </main>
         </div>
       </div>
+      <SettingsMenu isOpen={showSettings} globalSettings={globalSettings} updateGlobalSettings={updateGlobalSettings} />
     </div>
   );
 }
